@@ -1,0 +1,47 @@
+﻿@{
+    var F = Html.F();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title - FineUIMvc 快速入门</title>
+
+    @F.RenderCss()
+    <link href="~/res/css/common.css" rel="stylesheet" type="text/css" />
+    @RenderSection("head", false)
+
+</head>
+<body>
+    @Html.AntiForgeryToken()
+
+    @{
+        var pm = F.PageManager;
+
+        // 主题
+        HttpCookie themeCookie = Request.Cookies["Theme_Mvc"];
+        if (themeCookie != null)
+        {
+            string themeValue = themeCookie.Value;
+
+            Theme theme;
+            if (Enum.TryParse<Theme>(themeValue, true, out theme))
+            {
+				pm.CustomTheme(String.Empty);
+                pm.Theme(theme);
+            }
+            else
+            {
+                pm.CustomTheme(themeValue);
+            }
+        }
+    }
+    @F.PageManager
+
+    @RenderSection("body", true)
+
+    @F.RenderScript()
+    @RenderSection("script", false)
+
+</body>
+</html>

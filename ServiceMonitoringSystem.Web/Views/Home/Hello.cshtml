@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Hello";
+    var F = @Html.F();
+}
+
+@section body {
+
+    @(F.Button()
+        .Text("点击弹出对话框")
+        .ID("btnHello")
+        .OnClick(Url.Action("btnHello_Click"))
+    )
+
+}
+
+
+

@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Create";
+    var F = @Html.F();
+}
+
+@model ServiceMonitoringSystem.Web.Models.Student
+
+@section body {
+
+    @(F.Panel()
+        .ID("Panel1")
+        .ShowBorder(false)
+        .ShowHeader(false)
+        .BodyPadding(10)
+        .AutoScroll(true)
+        .IsViewPort(true)
+        .Toolbars(
+            F.Toolbar()
+                .Items(
+                    F.Button()
+                        .Icon(Icon.SystemClose)
+                        .Text("关闭")
+                        .Listener("click", "F.activeWindow.hide();"),
+                    F.ToolbarSeparator(),
+                    F.Button()
+                        .ValidateForms("SimpleForm1")
+                        .Icon(Icon.SystemSaveClose)
+                        .OnClick(Url.Action("btnCreate_Click"), "SimpleForm1")
+                        .Text("保存后关闭")
+                )
+        )
+        .Items(
+            F.SimpleForm()
+                .ID("SimpleForm1")
+                .ShowBorder(false)
+                .ShowHeader(false)
+                .Items(
+                    F.TextBoxFor(m => m.Name),
+                    F.RadioButtonListFor(m => m.Gender)
+                        .Items(
+                            F.RadioItem()
+                                .Text("男")
+                                .Value("1"),
+                            F.RadioItem()
+                                .Text("女")
+                                .Value("0")
+                        ),
+                    F.TextBoxFor(m => m.Major),
+                    F.DatePickerFor(m => m.EntranceDate)
+                        .EnableEdit(false)
+                )
+        )
+    )
+
+}
+
