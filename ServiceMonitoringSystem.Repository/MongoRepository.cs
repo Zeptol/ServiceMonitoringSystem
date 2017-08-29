@@ -23,7 +23,7 @@ namespace ServiceMonitoringSystem.Repository
             return _collection.FindOneAs<T>(query);
         }
 
-        public List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, IMongoQuery where = null, SortByBuilder sort = null)
+        public IQueryable<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, IMongoQuery where = null, SortByBuilder sort = null)
         {
             rowCount = (int) _collection.Count();
             var cursor = _collection.FindAs<T>(where);
@@ -31,7 +31,7 @@ namespace ServiceMonitoringSystem.Repository
                 cursor.SetSortOrder(sort);
             cursor.SetSkip(pageSize * (pageIndex - 1));
             cursor.SetLimit(pageSize);
-            return cursor.ToList();
+            return cursor.AsQueryable();
         }
     }
 }

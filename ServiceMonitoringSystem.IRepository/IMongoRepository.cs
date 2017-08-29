@@ -12,7 +12,6 @@ namespace ServiceMonitoringSystem.IRepository
     {
         T Get(IMongoQuery query);
 
-        List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, IMongoQuery where = null,
-            SortByBuilder sort = null);
+        IQueryable<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, IMongoQuery where = null, SortByBuilder sort = null);
     }
 }
