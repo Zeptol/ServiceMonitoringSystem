@@ -21,7 +21,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult btnHello_Click()
         {
-            Alert.Show("你好 FineUI！", MessageBoxIcon.Warning);
+            Alert.Show("你好 ！", MessageBoxIcon.Warning);
 
             return UIHelper.Result();
         }

@@ -16,6 +16,7 @@ namespace ServiceMonitoringSystem.Web
             ModelBinders.Binders.Add(typeof(JArray), new JArrayModelBinder());
             ModelBinders.Binders.Add(typeof(JObject), new JObjectModelBinder());
 
+            AutofacConfig.Register();
         }
     }
 }
