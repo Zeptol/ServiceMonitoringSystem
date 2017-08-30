@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
 
 namespace ServiceMonitoringSystem.IRepository
 {
     public interface IMongoRepository<T> where T : class
     {
-        T Get(IMongoQuery query);
+        T Get(Expression<Func<T, bool>> filter);
+        object Max(Expression<Func<T, object>> sort);
 
-        IQueryable<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, IMongoQuery where = null, SortByBuilder sort = null);
+        List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, Expression<Func<T, bool>> filter = null,
+            SortDefinition<T> sort = null);
+        void Add(T model);
+        T Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);
+        long Delete(Expression<Func<T, bool>> filter);
     }
 }

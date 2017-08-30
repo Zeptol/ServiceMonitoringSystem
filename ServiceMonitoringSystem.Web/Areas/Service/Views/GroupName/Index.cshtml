@@ -3,7 +3,7 @@
     var F = Html.F();
 }
 
-@model IEnumerable<ServiceMonitoringSystem.Model.GroupName>
+@model IEnumerable<GroupName>
 
 
 @section body {
@@ -59,7 +59,7 @@
                             F.Button()
                                 .ID("btnCreate")
                                 .Icon(Icon.Add)
-                                .Text("新增用户")
+                                .Text("添加")
                                 .Listener("click", "onCreateClick")
                         )
                 )
@@ -88,7 +88,7 @@
                                 .Width(100),
                     F.RenderField()
                         .HeaderText("备注")
-                        .DataField("Remark")
+                        .DataField("Remarks")
                                 .ExpandUnusedSpace(true),
                     F.RenderField()
                         .HeaderText("")
@@ -142,7 +142,7 @@
         }
 
         function onCreateClick(event) {
-            F.ui.Window1.show('@Url.Content("~/Service/GroupName/Create")', '新增用户');
+            F.ui.Window1.show('@Url.Content("~/Service/GroupName/Create")', '新增服务名称');
         }
 
 
@@ -163,6 +163,7 @@
             }
 
             var selectedRows = grid1.getSelectedRows();
+            console.log(selectedRows);
             F.confirm({
                 message: '你确定要删除选中的&nbsp;<b>' + selectedRows.length + '</b>&nbsp;行数据吗？',
                 target: '_top',
@@ -179,7 +180,7 @@
             grid1.el.on('click', 'a.deletefield', function (event) {
                 var rowEl = $(this).closest('.f-grid-row');
                 var rowData = grid1.getRowData(rowEl);
-
+                console.log(rowData);
                 F.confirm({
                     message: '你确定要删除选中的行数据吗？',
                     target: '_top',
