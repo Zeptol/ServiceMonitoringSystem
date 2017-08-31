@@ -25,18 +25,18 @@ namespace ServiceMonitoringSystem.Repository
         }
         public T Get(Expression<Func<T, bool>> filter)
         {
-            return _collection.FindOneAndUpdate(filter, null);
-            //return _collection.Find(filter).Limit(1) as T;
+            return _collection.Find(filter).FirstOrDefault();
         }
         public object Max(Expression<Func<T, object>> sort)
         {
             var cursor = _collection.Find(new BsonDocument()).SortByDescending(sort).Limit(1);
             return cursor.ToList().Select(sort.Compile()).FirstOrDefault();
         }
-        public List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, Expression<Func<T, bool>> filter, SortDefinition<T> sort)
+        public List<T> QueryByPage(int pageIndex, int pageSize, out long rowCount, FilterDefinition<T> filter, SortDefinition<T> sort)
         {
-            rowCount = (int)_collection.Count(filter);
-            var res = _collection.Find(filter);
+            var emptyFilter = new FilterDefinitionBuilder<T>().Empty;
+            rowCount =  _collection.Count(filter ?? emptyFilter);
+            var res = _collection.Find(filter ?? emptyFilter);
             if (sort!=null)
                 res=res.Sort(sort);
             res = res.Skip(pageSize * pageIndex).Limit(pageSize);

@@ -8,7 +8,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using ServiceMonitoringSystem.IRepository;
 using ServiceMonitoringSystem.Model;
-
+using ServiceMonitoringSystem.Common.Extensions;
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
     public class GroupNameController : Controller
@@ -24,7 +24,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         // GET: /Service/GroupName/
         public ActionResult Index()
         {
-            int count;
+            long count;
             var list = _groupName.QueryByPage(0, PageSize, out count);
             ViewBag.RecordCount = count;
             ViewBag.PageSize = PageSize;
@@ -125,26 +125,24 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             var serName = values["tbxServiceName"];
             var fields = JArray.Parse(values["Grid1_fields"]);
             var pageIndex = Convert.ToInt32(values["Grid1_pageIndex"]);
-            int count;
-            Expression<Func<GroupName, bool>> filter = t => true;
+            long count;
+            Expression<Func<GroupName, bool>> filter = null;
             if (!string.IsNullOrEmpty(id))
             {
                 int idInt;
                 int.TryParse(id, out idInt);
-                Expression<Func<GroupName, bool>> idFilter = t => t._id==idInt;
-                filter = (Expression<Func<GroupName, bool>>)Expression.And(filter, idFilter).Conversion;
+                filter = t => t._id == idInt;
             }
 
             if (!string.IsNullOrEmpty(serName))
             {
-                Expression<Func<GroupName, bool>> serFilter =
-                    t => t.ServiceName.IndexOf(serName, StringComparison.InvariantCultureIgnoreCase) >= 0 ||
-                         t.ServiceNameCN.IndexOf(serName, StringComparison.InvariantCultureIgnoreCase) >= 0;
-                filter = (Expression<Func<GroupName, bool>>)Expression.And(filter, serFilter).Conversion;
+                filter = filter.And(t => t.ServiceName.Contains(serName, StringComparison.InvariantCultureIgnoreCase) ||
+                                         t.ServiceNameCN.Contains(serName,
+                                             StringComparison.InvariantCultureIgnoreCase));
             }
             var list = _groupName.QueryByPage(pageIndex, PageSize, out count, filter);
             var grid = UIHelper.Grid("Grid1");
-            grid.RecordCount(count);
+            grid.RecordCount((int) count);
             grid.DataSource(list, fields);
         }
         private bool CheckRepeat(GroupName model)

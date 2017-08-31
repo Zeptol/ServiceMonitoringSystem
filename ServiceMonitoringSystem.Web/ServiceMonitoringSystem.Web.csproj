@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode>true</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1958,6 +1959,10 @@
     <Content Include="Views\Home\Themes.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ServiceMonitoringSystem.Common\ServiceMonitoringSystem.Common.csproj">
+      <Project>{5a4da15f-4a27-4613-8512-dd3d14d6194e}</Project>
+      <Name>ServiceMonitoringSystem.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServiceMonitoringSystem.IRepository\ServiceMonitoringSystem.IRepository.csproj">
       <Project>{D4EE32DD-355E-45EE-B2E6-9643EAC20C34}</Project>
       <Name>ServiceMonitoringSystem.IRepository</Name>

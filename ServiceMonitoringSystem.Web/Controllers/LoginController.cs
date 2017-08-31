@@ -1,8 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
 using System.Web.Mvc;
 using System.Web.Security;
 using FineUIMvc;
-using MongoDB.Bson;
 using ServiceMonitoringSystem.IRepository;
 using ServiceMonitoringSystem.Model;
 
@@ -11,6 +10,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
     public class LoginController : BaseController
     {
         private readonly IMongoRepository<User> _user;
+
         public LoginController(IMongoRepository<User> user)
         {
             _user = user;
@@ -27,12 +27,10 @@ namespace ServiceMonitoringSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult btnLogin_Click(string tbxUserName, string tbxPassword)
         {
-            //var query = Query.And(Query<User>.EQ(t => t.UserName, tbxUserName),
-            //    Query<User>.Matches(t => t.UserPwd,
-            //        new BsonRegularExpression(
-            //            new Regex(FormsAuthentication.HashPasswordForStoringInConfigFile(tbxPassword, "md5"),
-            //                RegexOptions.IgnoreCase))));
-            if (_user.Get(null)!=null)
+            if (_user.Get(t => t.UserName == tbxUserName &&
+                               t.UserPwd.Equals(
+                                   FormsAuthentication.HashPasswordForStoringInConfigFile(tbxPassword, "md5"),
+                                   StringComparison.InvariantCultureIgnoreCase)) != null)
             {
                 FormsAuthentication.RedirectFromLoginPage(tbxUserName, false);
             }
