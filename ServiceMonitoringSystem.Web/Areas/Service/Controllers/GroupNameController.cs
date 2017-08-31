@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using FineUIMvc;
@@ -123,40 +124,41 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 
         private void UpdateGrid(NameValueCollection values)
         {
-            //var id = values["tbxId"];
-            //var serName = values["tbxServiceName"];
-            //var fields = JArray.Parse(values["Grid1_fields"]);
-            //var pageIndex = Convert.ToInt32(values["Grid1_pageIndex"]);
-            //int count;
+            var id = values["tbxId"];
+            var serName = values["tbxServiceName"];
+            var fields = JArray.Parse(values["Grid1_fields"]);
+            var pageIndex = Convert.ToInt32(values["Grid1_pageIndex"]);
+            int count;
+            Expression<Func<GroupName, bool>> filter = t => true;
 
-            //var list = _groupName.QueryByPage(pageIndex, PageSize, out count, @where);
+            if (!string.IsNullOrEmpty(id))
+            {
+                int idInt;
+                int.TryParse(id, out idInt);
+                //queryList.Add(Query<GroupName>.EQ(t => t._id, idInt));
+                Expression<Func<GroupName, bool>> idFilter = t => t._id==idInt;
+                filter = (Expression<Func<GroupName, bool>>) Expression.And(filter, idFilter).Conversion;
+            }
 
-            //if (!string.IsNullOrEmpty(id))
-            //{
-            //    int idInt;
-            //    int.TryParse(id, out idInt);
-            //    queryList.Add(Query<GroupName>.EQ(t => t._id, idInt));
-            //}
-
-            //if (!string.IsNullOrEmpty(serName))
-            //{
-            //    var reg = new BsonRegularExpression(new Regex(serName, RegexOptions.IgnoreCase));
-            //    queryList.Add(Query.Or(Query<GroupName>.Matches(t => t.ServiceName, reg),
-            //        Query<GroupName>.Matches(t => t.ServiceNameCN, reg)));
-            //}
+            if (!string.IsNullOrEmpty(serName))
+            {
+                //var reg = new BsonRegularExpression(new Regex(serName, RegexOptions.IgnoreCase));
+                //queryList.Add(Query.Or(Query<GroupName>.Matches(t => t.ServiceName, reg),
+                //    Query<GroupName>.Matches(t => t.ServiceNameCN, reg)));
+                Expression<Func<GroupName, bool>> serFilter = t => t.ServiceName.Contains(serName);
+                filter = (Expression<Func<GroupName, bool>>)Expression.And(filter, serFilter).Conversion;
+            }
             //var where = queryList.Any() ? Query.And(queryList) : null;
-            //var grid = UIHelper.Grid("Grid1");
-            //grid.RecordCount(count);
-            //grid.DataSource(list, fields);
+            var list = _groupName.QueryByPage(pageIndex, PageSize, out count, filter);
+            var grid = UIHelper.Grid("Grid1");
+            grid.RecordCount(count);
+            grid.DataSource(list, fields);
         }
         private bool CheckRepeat(GroupName model)
         {
-            //var query = Query.Or(Query<GroupName>.EQ(t => t._id, model._id),
-            //    Query<GroupName>.EQ(t => t.ServiceName, model.ServiceName));
-            //var modelDb = _groupName.Get(query);
-            //if (modelDb == null) return true;
-            //return model._id == modelDb._id;
-            return true;
+            var modelDb = _groupName.Get(t => t._id == model._id || t.ServiceName == model.ServiceName);
+            if (modelDb == null) return true;
+            return model._id == modelDb._id;
         }
     }
 }
