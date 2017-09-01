@@ -141,6 +141,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Service\Controllers\GroupNameController.cs" />
+    <Compile Include="Areas\Service\Controllers\ManageController.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1922,6 +1923,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Service\Models\" />
+    <Folder Include="Areas\Service\Views\Manage\" />
     <Folder Include="res\js\" />
   </ItemGroup>
   <ItemGroup>

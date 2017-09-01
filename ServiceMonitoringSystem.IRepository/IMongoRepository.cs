@@ -7,10 +7,11 @@ namespace ServiceMonitoringSystem.IRepository
 {
     public interface IMongoRepository<T> where T : class
     {
+        T Get(FilterDefinition<T> filter);
         T Get(Expression<Func<T, bool>> filter);
         object Max(Expression<Func<T, object>> sort);
 
-        List<T> QueryByPage(int pageIndex, int pageSize, out long rowCount, FilterDefinition<T> filter = null,
+        List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, FilterDefinition<T> filter = null,
             SortDefinition<T> sort = null);
         void Add(T model);
         T Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);

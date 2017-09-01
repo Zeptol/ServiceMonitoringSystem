@@ -5,9 +5,9 @@ namespace ServiceMonitoringSystem.Common.Extensions
 {
     public static class Extensions
     {
-        public static bool Contains(this string src, string str, StringComparison stringComparison)
+        public static bool Contains(this string src, string str, StringComparison comparisonType)
         {
-            return src.IndexOf(str, stringComparison) >= 0;
+            return src.IndexOf(str, comparisonType) >= 0;
         }
 
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)

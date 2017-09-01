@@ -12,11 +12,11 @@ namespace ServiceMonitoringSystem.Repository
     public class MongoRepository<T> : IMongoRepository<T> where T : class
     {
         private readonly IMongoCollection<T> _collection;
-        public MongoRepository()
+        public MongoRepository(string collectionName = null)
         {
-            _collection = GetCollection();
+            _collection = GetCollection(collectionName);
         }
-        private static IMongoCollection<T> GetCollection(string collectionName = null)
+        private static IMongoCollection<T> GetCollection(string collectionName)
         {
             var mongoUrl = new MongoUrl(ConfigurationManager.AppSettings["mongo"]);
             var mongoClient = new MongoClient(mongoUrl);
@@ -27,15 +27,20 @@ namespace ServiceMonitoringSystem.Repository
         {
             return _collection.Find(filter).FirstOrDefault();
         }
+
+        public T Get(FilterDefinition<T> filter)
+        {
+            return _collection.Find(filter).FirstOrDefault();
+        }
         public object Max(Expression<Func<T, object>> sort)
         {
             var cursor = _collection.Find(new BsonDocument()).SortByDescending(sort).Limit(1);
             return cursor.ToList().Select(sort.Compile()).FirstOrDefault();
         }
-        public List<T> QueryByPage(int pageIndex, int pageSize, out long rowCount, FilterDefinition<T> filter, SortDefinition<T> sort)
+        public List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, FilterDefinition<T> filter, SortDefinition<T> sort)
         {
             var emptyFilter = new FilterDefinitionBuilder<T>().Empty;
-            rowCount =  _collection.Count(filter ?? emptyFilter);
+            rowCount =  (int) _collection.Count(filter ?? emptyFilter);
             var res = _collection.Find(filter ?? emptyFilter);
             if (sort!=null)
                 res=res.Sort(sort);

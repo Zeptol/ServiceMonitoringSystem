@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using FineUIMvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using ServiceMonitoringSystem.IRepository;
 using ServiceMonitoringSystem.Model;
-using ServiceMonitoringSystem.Common.Extensions;
+
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
     public class GroupNameController : Controller
@@ -24,7 +26,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         // GET: /Service/GroupName/
         public ActionResult Index()
         {
-            long count;
+            int count;
             var list = _groupName.QueryByPage(0, PageSize, out count);
             ViewBag.RecordCount = count;
             ViewBag.PageSize = PageSize;
@@ -125,24 +127,28 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             var serName = values["tbxServiceName"];
             var fields = JArray.Parse(values["Grid1_fields"]);
             var pageIndex = Convert.ToInt32(values["Grid1_pageIndex"]);
-            long count;
-            Expression<Func<GroupName, bool>> filter = null;
+            int count;
+            var filter = new List<FilterDefinition<GroupName>>();
             if (!string.IsNullOrEmpty(id))
             {
                 int idInt;
                 int.TryParse(id, out idInt);
-                filter = t => t._id == idInt;
+                filter.Add(Builders<GroupName>.Filter.Eq(t => t._id, idInt));
             }
 
             if (!string.IsNullOrEmpty(serName))
             {
-                filter = filter.And(t => t.ServiceName.Contains(serName, StringComparison.InvariantCultureIgnoreCase) ||
-                                         t.ServiceNameCN.Contains(serName,
-                                             StringComparison.InvariantCultureIgnoreCase));
+                filter.Add(
+                    Builders<GroupName>.Filter.Or(
+                        Builders<GroupName>.Filter.Regex(t => t.ServiceName,
+                            new BsonRegularExpression(new Regex(serName, RegexOptions.IgnoreCase))),
+                        Builders<GroupName>.Filter.Regex(t => t.ServiceNameCN,
+                            new BsonRegularExpression(new Regex(serName, RegexOptions.IgnoreCase)))));
             }
-            var list = _groupName.QueryByPage(pageIndex, PageSize, out count, filter);
+            var where = filter.Any() ? Builders<GroupName>.Filter.And(filter) : null;
+            var list = _groupName.QueryByPage(pageIndex, PageSize, out count, where);
             var grid = UIHelper.Grid("Grid1");
-            grid.RecordCount((int) count);
+            grid.RecordCount(count);
             grid.DataSource(list, fields);
         }
         private bool CheckRepeat(GroupName model)
