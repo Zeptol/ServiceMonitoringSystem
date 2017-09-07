@@ -140,6 +140,7 @@
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Service\Controllers\BasicTypeController.cs" />
     <Compile Include="Areas\Service\Controllers\GroupNameController.cs" />
     <Compile Include="Areas\Service\Controllers\ManageController.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
@@ -1898,6 +1899,9 @@
     <Content Include="Areas\Service\Views\GroupName\Index.cshtml" />
     <Content Include="Areas\Service\Views\GroupName\Create.cshtml" />
     <Content Include="Areas\Service\Views\GroupName\Edit.cshtml" />
+    <Content Include="Areas\Service\Views\BasicType\Index.cshtml" />
+    <Content Include="Areas\Service\Views\BasicType\Create.cshtml" />
+    <Content Include="Areas\Service\Views\BasicType\Edit.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1965,6 +1969,10 @@
       <Project>{5a4da15f-4a27-4613-8512-dd3d14d6194e}</Project>
       <Name>ServiceMonitoringSystem.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServiceMonitoringSystem.Interface\ServiceMonitoringSystem.Interface.csproj">
+      <Project>{71E4F693-1D15-453A-9634-1180E39F407A}</Project>
+      <Name>ServiceMonitoringSystem.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ServiceMonitoringSystem.IRepository\ServiceMonitoringSystem.IRepository.csproj">
       <Project>{D4EE32DD-355E-45EE-B2E6-9643EAC20C34}</Project>
       <Name>ServiceMonitoringSystem.IRepository</Name>
@@ -1976,6 +1984,10 @@
     <ProjectReference Include="..\ServiceMonitoringSystem.Repository\ServiceMonitoringSystem.Repository.csproj">
       <Project>{650ad1eb-e211-4b09-820f-57abf1a056a4}</Project>
       <Name>ServiceMonitoringSystem.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceMonitoringSystem.Service\ServiceMonitoringSystem.Service.csproj">
+      <Project>{e724acb0-4cbd-42fb-b521-d38bcc4f228b}</Project>
+      <Name>ServiceMonitoringSystem.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -49,12 +49,12 @@ namespace ServiceMonitoringSystem.Web
             }
             //builder.RegisterTypes(types).AsImplementedInterfaces(); //指明创建的rtypes这个集合中所有类的对象实例，以其接口的形式保存  
 
-            //3.4 加载业务逻辑层ServiceMonitoringSystem.Services这个程序集。  
-            //Assembly servicesAss = Assembly.Load("ServiceMonitoringSystem.Services");
-            //3.5 反射扫描这个ServiceMonitoringSystem.Services.dll程序集中所有的类，得到这个程序集中所有类的集合。  
-            //Type[] stypes = servicesAss.GetTypes();
+            //3.4 加载业务逻辑层ServiceMonitoringSystem.Service这个程序集。  
+            Assembly servicesAss = Assembly.Load("ServiceMonitoringSystem.Service");
+            //3.5 反射扫描这个ServiceMonitoringSystem.Service.dll程序集中所有的类，得到这个程序集中所有类的集合。  
+            Type[] stypes = servicesAss.GetTypes();
             //3.6 告诉AutoFac容器，创建stypes这个集合中所有类的对象实例  
-            //builder.RegisterTypes(stypes).AsImplementedInterfaces(); //指明创建的stypes这个集合中所有类的对象实例，以其接口的形式保存  
+            builder.RegisterTypes(stypes).AsImplementedInterfaces(); //指明创建的stypes这个集合中所有类的对象实例，以其接口的形式保存  
 
 
             //第四步：创建一个真正的AutoFac的工作容器  

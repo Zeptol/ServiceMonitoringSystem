@@ -5,15 +5,16 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceMonitoringSystem.IRepository;
 using ServiceMonitoringSystem.Model;
+using ServiceMonitoringSystem.Web.Controllers;
 
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
-        private readonly IMongoRepository<ServiceEntity> _service;
-        public ManageController(IMongoRepository<ServiceEntity> service)
+        private readonly IMongoRepository<ServiceEntity> _rep;
+        public ManageController(IMongoRepository<ServiceEntity> rep)
         {
-            _service = service;
+            _rep = rep;
         }
         //
         // GET: /Service/Manage/

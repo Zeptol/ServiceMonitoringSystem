@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace ServiceMonitoringSystem.Common.Extensions
 {
-    public static class Extensions
+    public static class CommonExtensions
     {
         public static bool Contains(this string src, string str, StringComparison comparisonType)
         {

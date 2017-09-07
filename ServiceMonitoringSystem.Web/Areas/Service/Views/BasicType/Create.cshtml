@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Create";
+    var F = Html.F();
+}
+
+@model BasicType
+
+@section body {
+
+    @(F.Panel()
+          .ID("Panel1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .BodyPadding(10)
+          .AutoScroll(true)
+          .IsViewPort(true)
+          .Toolbars(
+              F.Toolbar()
+                  .Items(
+                      F.Button()
+                          .Icon(Icon.SystemClose)
+                          .Text("关闭")
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.ToolbarSeparator(),
+                      F.Button()
+                          .ValidateForms("SimpleForm1")
+                          .Icon(Icon.SystemSaveClose)
+                          .OnClick(Url.Action("btnCreate_Click"), "SimpleForm1")
+                          .Text("保存后关闭")
+                  )
+          )
+          .Items(
+              F.SimpleForm()
+                  .ID("SimpleForm1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .Items(
+                      F.DropDownListFor(m => m.TypeId).Items(ViewBag.TypeList).Required(true).Label("类型"),
+                      F.TextBoxFor(m => m.Num).Required(true).Label("编号"),
+                      F.TextBoxFor(m => m.Name).Required(true).Label("名称")
+                  )
+          )
+          )
+
+}
