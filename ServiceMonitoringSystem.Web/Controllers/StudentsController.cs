@@ -9,7 +9,7 @@ using ServiceMonitoringSystem.Web.Models;
 namespace ServiceMonitoringSystem.Web.Controllers
 {
     [Authorize]
-    public class StudentsController : BaseController
+    public class StudentsController : Controller
     {
         private StudentDbContext db = new StudentDbContext();
 
@@ -97,7 +97,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Grid1_Delete(JArray selectedRows, JArray Grid1_fields)
         {
-            foreach (string rowId in selectedRows)
+            foreach (JToken rowId in selectedRows)
             {
                 Student student = db.Students.Find(Convert.ToInt32(rowId));
                 db.Students.Remove(student);

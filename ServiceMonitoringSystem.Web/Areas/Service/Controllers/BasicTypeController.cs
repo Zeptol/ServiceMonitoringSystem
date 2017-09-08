@@ -15,23 +15,20 @@ using ServiceMonitoringSystem.Web.Controllers;
 
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
-    public class BasicTypeController : BaseController
+    public class BasicTypeController : BaseController<BasicType>
     {
-        private readonly IMongoRepository<BasicType> _rep;
         private readonly ICommon _common;
-        public BasicTypeController(IMongoRepository<BasicType> rep,ICommon common)
+        public BasicTypeController(ICommon common, IMongoRepository<BasicType> rep)
+            : base(rep)
         {
-            _rep = rep;
             _common = common;
+            Rep = rep;
+            Updated += BasicTypeController_Updated;
         } 
         //
         // GET: /Service/BasicType/
-        public ActionResult Index()
+        public override ActionResult Index()
         {
-            int count;
-            var list = _rep.QueryByPage(0, PageSize, out count);
-            ViewBag.RecordCount = count;
-            ViewBag.PageSize = PageSize;
             var typeList = _common.GetTypeList().ToList();
             typeList.Insert(0, new ListItem
             {
@@ -39,15 +36,10 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                 Value = string.Empty
             });
             ViewBag.TypeList = typeList.ToArray();
-            return View(list);
+            return base.Index();
         }
 
-        public ActionResult DoSearch(FormCollection values)
-        {
-            UpdateGrid(values);
-            return UIHelper.Result();
-        }
-        private void UpdateGrid(NameValueCollection values)
+        private void BasicTypeController_Updated(NameValueCollection values)
         {
             var type = values["ddlType"];
             var num = values["tbxNum"];
@@ -70,7 +62,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                 filter.Add(Builders<BasicType>.Filter.Regex(t => t.Name,
                     new BsonRegularExpression(new Regex(name, RegexOptions.IgnoreCase))));
             }
-            base.UpdateGrid(values, filter, _rep);
+            UpdateGrid(values, filter);
         }
         public ViewResult Create()
         {
@@ -79,7 +71,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var model = _rep.Get(t => t._id == id);
+            var model = Rep.Get(t => t._id == id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -89,8 +81,8 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Delete(JArray selectedRows, FormCollection values)
         {
-            _rep.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t._id));
-            UpdateGrid(values);
+            Rep.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t._id));
+            OnUpdated(values);
             return UIHelper.Result();
         }
 
@@ -108,9 +100,9 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                         }
                         else
                         {
-                            var max = (int)(_rep.Max(t => t._id) ?? 0);
+                            var max = (int)(Rep.Max(t => t._id) ?? 0);
                             model._id = max + 1;
-                            _rep.Add(model);
+                            Rep.Add(model);
                             // 关闭本窗体（触发窗体的关闭事件）
                             PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
                         }
@@ -140,7 +132,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     }
                     else
                     {
-                        _rep.Update(t => t._id == model._id,
+                        Rep.Update(t => t._id == model._id,
                             Builders<BasicType>.Update.Set(t => t.TypeId, model.TypeId)
                                 .Set(t => t.Num, model.Num)
                                 .Set(t => t.Name, model.Name));
@@ -157,7 +149,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         private bool CheckRepeat(BasicType model)
         {
-            var modelDb = _rep.Get(t => t.Num == model.Num || t.Name == model.Name);
+            var modelDb = Rep.Get(t => t.Num == model.Num || t.Name == model.Name);
             if (modelDb == null) return true;
             return model._id == modelDb._id;
         }

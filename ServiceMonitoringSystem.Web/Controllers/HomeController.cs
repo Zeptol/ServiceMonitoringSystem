@@ -5,7 +5,7 @@ using FineUIMvc;
 namespace ServiceMonitoringSystem.Web.Controllers
 {
     [Authorize]
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
         public ActionResult Index()
         {

@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppContacts.cs" />
     <Compile Include="BasicType.cs" />
     <Compile Include="GroupName.cs" />
     <Compile Include="ServiceEntity.cs" />

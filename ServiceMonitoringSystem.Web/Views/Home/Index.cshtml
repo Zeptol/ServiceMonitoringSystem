@@ -17,15 +17,15 @@
             <tr>
                 <td>
                     @(F.Button()
-                        //.OnClientClick("window.open('http://fineui.com/mvc/','_blank');")
-                        .EnableDefaultCorner(false)
-                        .EnableDefaultState(false)
-                        .IconFont(IconFont.Home)
-                        .IconAlign(IconAlign.Top)
-                        .ToolTip("官网首页")
-                        .ID("btnHomePage")
-                        .CssClass("icononlyaction")
-                    )
+                          //.OnClientClick("window.open('http://fineui.com/mvc/','_blank');")
+                          .EnableDefaultCorner(false)
+                          .EnableDefaultState(false)
+                          .IconFont(IconFont.Home)
+                          .IconAlign(IconAlign.Top)
+                          .ToolTip("官网首页")
+                          .ID("btnHomePage")
+                          .CssClass("icononlyaction")
+                          )
                     <a class="logo" href="#">
                         服务监测系统
                     </a>
@@ -33,37 +33,37 @@
                 <td style="text-align: right;">
 
                     @(F.Button()
-                        .EnableDefaultCorner(false)
-                        .EnableDefaultState(false)
-                        .IconFont(IconFont.Bank)
-                        .IconAlign(IconAlign.Top)
-                        .Text("主题仓库")
-                        .ID("btnThemeSelect")
-                        .CssClass("icontopaction themes")
-                        .Listener("click", "onThemeSelectClick")
-                    )
+                          .EnableDefaultCorner(false)
+                          .EnableDefaultState(false)
+                          .IconFont(IconFont.Bank)
+                          .IconAlign(IconAlign.Top)
+                          .Text("主题仓库")
+                          .ID("btnThemeSelect")
+                          .CssClass("icontopaction themes")
+                          .Listener("click", "onThemeSelectClick")
+                          )
 
                     @(F.Button()
-                        .EnableDefaultCorner(false)
-                        .EnableDefaultState(false)
-                        .IconAlign(IconAlign.Left)
-                        //.IconUrl(Url.Content("~/res/images/my_face_80.jpg"))
-                        .Text("admin")
-                        .CssClass("userpicaction")
-                        .Menu(F.Menu()
-                            .Items(
-                                F.MenuButton()
-                                    .IconFont(IconFont.User)
-                                    .Text("个人信息")
-                                    .Listener("click", "F.alert('尚未实现');"),
-                                F.MenuSeparator(),
-                                F.MenuButton()
-                                    .IconFont(IconFont.SignOut)
-                                    .Text("安全退出")
-                                    .OnClick(Url.Action("onSignOut_Click"))
-                            )
-                        )
-                    )
+                          .EnableDefaultCorner(false)
+                          .EnableDefaultState(false)
+                          .IconAlign(IconAlign.Left)
+                          //.IconUrl(Url.Content("~/res/images/my_face_80.jpg"))
+                          .Text("admin")
+                          .CssClass("userpicaction")
+                          .Menu(F.Menu()
+                              .Items(
+                                  F.MenuButton()
+                                      .IconFont(IconFont.User)
+                                      .Text("个人信息")
+                                      .Listener("click", "F.alert('尚未实现');"),
+                                  F.MenuSeparator(),
+                                  F.MenuButton()
+                                      .IconFont(IconFont.SignOut)
+                                      .Text("安全退出")
+                                      .OnClick(Url.Action("onSignOut_Click"))
+                              )
+                          )
+                          )
                 </td>
             </tr>
         </table>
@@ -73,15 +73,15 @@
         <h2>FineUIMvc</h2>
         基于 jQuery 的专业 ASP.NET MVC 控件库
 
-        <br />
+        <br/>
         <h2>支持的浏览器</h2>
         Chrome、Firefox、Safari、Edge、IE8.0+
 
-        <br />
+        <br/>
         <h2>授权协议</h2>
         商业授权
 
-        <br />
+        <br/>
         <h2>相关链接</h2>
         <ul class="list">
             <li>
@@ -101,85 +101,88 @@
     </div>
 
     @(F.RegionPanel()
-        .ID("RegionPanel1")
-        .ShowBorder(false)
-        .IsViewPort(true)
-        .Regions(
-            F.Region()
-                .ID("Region1")
-                .ShowBorder(false)
-                .ShowHeader(false)
-                .RegionPosition(Position.Top)
-                .Layout(LayoutType.Fit)
-                .ContentEl("#header"),
-            F.Region()
-                .ID("Region2")
-                .RegionSplit(true)
-                .Width(200)
-                .ShowHeader(true)
-                .Title("菜单")
-                .EnableCollapse(true)
-                .Layout(LayoutType.Fit)
-                .RegionPosition(Position.Left)
-                .Items(
-                    F.Tree()
-                        .ShowBorder(false)
-                        .ShowHeader(false)
-                        .ID("treeMenu")
-                        .Nodes(
-                            F.TreeNode()
-                                .Text("服务管理")
-                                .Expanded(true)
-                                .Nodes(
-                                    F.TreeNode()
-                                        .Text("服务名称管理")
-                                        .NavigateUrl("~/Service/GroupName"),
-                                    F.TreeNode()
-                                        .Text("基础类型")
-                                                .NavigateUrl("~/Service/BasicType"),
-                                    F.TreeNode()
-                                        .Text("学生管理（搜索和分页）")
-                                        .NavigateUrl("~/StudentsSearchPaging")
-                                )
-                        )
-                ),
-            F.Region()
-                .ID("mainRegion")
-                .ShowHeader(false)
-                .Layout(LayoutType.Fit)
-                .RegionPosition(Position.Center)
-                .Items(
-                    F.TabStrip()
-                        .ID("mainTabStrip")
-                        .EnableTabCloseMenu(true)
-                        .ShowBorder(false)
-                        .Tabs(
-                            F.Tab()
-                                .ID("Tab1")
-                                .Title("首页")
-                                .BodyPadding(10)
-                                .Layout(LayoutType.Fit)
-                                .Icon(Icon.House)
-                                .ContentEl("#maincontent")
-                        )
-                )
-        )
-    )
+          .ID("RegionPanel1")
+          .ShowBorder(false)
+          .IsViewPort(true)
+          .Regions(
+              F.Region()
+                  .ID("Region1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .RegionPosition(Position.Top)
+                  .Layout(LayoutType.Fit)
+                  .ContentEl("#header"),
+              F.Region()
+                  .ID("Region2")
+                  .RegionSplit(true)
+                  .Width(200)
+                  .ShowHeader(true)
+                  .Title("菜单")
+                  .EnableCollapse(true)
+                  .Layout(LayoutType.Fit)
+                  .RegionPosition(Position.Left)
+                  .Items(
+                      F.Tree()
+                          .ShowBorder(false)
+                          .ShowHeader(false)
+                          .ID("treeMenu")
+                          .Nodes(
+                              F.TreeNode()
+                                  .Text("服务管理")
+                                  .Expanded(true)
+                                  .Nodes(
+                                      F.TreeNode()
+                                          .Text("服务名称管理")
+                                          .NavigateUrl("~/Service/GroupName"),
+                                      F.TreeNode()
+                                          .Text("基础类型")
+                                          .NavigateUrl("~/Service/BasicType"),
+                                      F.TreeNode()
+                                          .Text("联系人")
+                                          .NavigateUrl("~/Service/AppContacts"),
+                                      F.TreeNode()
+                                          .Text("学生管理（搜索和分页）")
+                                          .NavigateUrl("~/StudentsSearchPaging")
+                                  )
+                          )
+                  ),
+              F.Region()
+                  .ID("mainRegion")
+                  .ShowHeader(false)
+                  .Layout(LayoutType.Fit)
+                  .RegionPosition(Position.Center)
+                  .Items(
+                      F.TabStrip()
+                          .ID("mainTabStrip")
+                          .EnableTabCloseMenu(true)
+                          .ShowBorder(false)
+                          .Tabs(
+                              F.Tab()
+                                  .ID("Tab1")
+                                  .Title("首页")
+                                  .BodyPadding(10)
+                                  .Layout(LayoutType.Fit)
+                                  .Icon(Icon.House)
+                                  .ContentEl("#maincontent")
+                          )
+                  )
+          )
+          )
 
     @(F.Window()
-        .Hidden(true)
-        .EnableResize(true)
-        .EnableMaximize(true)
-        .EnableClose(true)
-        .Height(600)
-        .Width(1020)
-        .IsModal(true)
-        .ClearIFrameAfterClose(false)
-        .IFrameUrl(Url.Content("~/Home/Themes"))
-        .EnableIFrame(true)
-        .Title("主题仓库")
-        .ID("windowThemeRoller")
-    )
+          .Hidden(true)
+          .EnableResize(true)
+          .EnableMaximize(true)
+          .EnableClose(true)
+          .Height(600)
+          .Width(1020)
+          .IsModal(true)
+          .ClearIFrameAfterClose(false)
+          .IFrameUrl(Url.Content("~/Home/Themes"))
+          .EnableIFrame(true)
+          .Title("主题仓库")
+          .ID("windowThemeRoller")
+          )
 
 }
 

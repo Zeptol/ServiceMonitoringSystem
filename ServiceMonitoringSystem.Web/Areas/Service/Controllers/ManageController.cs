@@ -9,12 +9,11 @@ using ServiceMonitoringSystem.Web.Controllers;
 
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
-    public class ManageController : BaseController
+    public class ManageController : BaseController<ServiceEntity>
     {
-        private readonly IMongoRepository<ServiceEntity> _rep;
-        public ManageController(IMongoRepository<ServiceEntity> rep)
+        public ManageController(IMongoRepository<ServiceEntity> rep):base(rep)
         {
-            _rep = rep;
+            Rep = rep;
         }
         //
         // GET: /Service/Manage/

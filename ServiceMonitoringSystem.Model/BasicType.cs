@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace ServiceMonitoringSystem.Model
+﻿namespace ServiceMonitoringSystem.Model
 {
     public class BasicType
     {

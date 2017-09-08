@@ -36,7 +36,11 @@
                               F.Button()
                                   .ID("btnSearch")
                                   .Text("检索")
-                                  .OnClick(Url.Action("DoSearch"), "Form1,Grid1")
+                                  .OnClick(Url.Action("DoSearch"), "Form1,Grid1"),
+                              F.Button()
+                                  .ID("btnReset")
+                                  .Text("重置")
+                                  .OnClientClick("F.ui.Form1.reset();")
                           )
                   ),
               F.Grid()
@@ -118,7 +122,6 @@
           )
 
 }
-
 
 @section script {
 

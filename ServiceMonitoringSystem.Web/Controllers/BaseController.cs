@@ -10,9 +10,24 @@ using ServiceMonitoringSystem.IRepository;
 
 namespace ServiceMonitoringSystem.Web.Controllers
 {
-    public class BaseController : Controller
+    public class BaseController<T> : Controller where T : class
     {
+        protected IMongoRepository<T> Rep;
         protected const int PageSize = 20;
+
+        protected delegate void UpdateGridHandler(NameValueCollection values);
+
+        protected event UpdateGridHandler Updated;
+
+        protected virtual void OnUpdated(NameValueCollection values)
+        {
+            if (Updated != null) Updated.Invoke(values);
+            else UpdateGrid(values, null);
+        }
+        public BaseController(IMongoRepository<T> rep)
+        {
+            Rep = rep;
+        }
         /// <summary>
         /// 显示通知对话框
         /// </summary>
@@ -40,26 +55,41 @@ namespace ServiceMonitoringSystem.Web.Controllers
         /// <param name="target"></param>
         public virtual void ShowNotify(string message, MessageBoxIcon messageIcon, Target target)
         {
-            Notify n = new Notify();
-            n.Target = target;
-            n.Message = message;
-            n.MessageBoxIcon = messageIcon;
-            n.PositionX = Position.Center;
-            n.PositionY = Position.Top;
-            n.DisplayMilliseconds = 3000;
-            n.ShowHeader = false;
+            var n = new Notify
+            {
+                Target = target,
+                Message = message,
+                MessageBoxIcon = messageIcon,
+                PositionX = Position.Center,
+                PositionY = Position.Top,
+                DisplayMilliseconds = 3000,
+                ShowHeader = false
+            };
 
             n.Show();
         }
 
-        protected virtual void UpdateGrid<T>(NameValueCollection values, List<FilterDefinition<T>> filter,
-            IMongoRepository<T> rep, string gridName = "Grid1") where T : class
+        public virtual ActionResult Index()
+        {
+            int count;
+            var list = Rep.QueryByPage(0, PageSize, out count);
+            ViewBag.RecordCount = count;
+            ViewBag.PageSize = PageSize;
+            return View(list);
+        }
+
+        public virtual ActionResult DoSearch(FormCollection values)
+        {
+            OnUpdated(values);
+            return UIHelper.Result();
+        }
+        protected void UpdateGrid(NameValueCollection values, List<FilterDefinition<T>> filter, string gridName = "Grid1")
         {
             var fields = JArray.Parse(values[gridName + "_fields"]);
             var pageIndex = Convert.ToInt32(values[gridName + "_pageIndex"]);
             int count;
             var where = filter != null && filter.Any() ? Builders<T>.Filter.And(filter) : null;
-            var list = rep.QueryByPage(pageIndex, PageSize, out count, where);
+            var list = Rep.QueryByPage(pageIndex, PageSize, out count, where);
             var grid = UIHelper.Grid(gridName);
             grid.RecordCount(count);
             grid.DataSource(list, fields);

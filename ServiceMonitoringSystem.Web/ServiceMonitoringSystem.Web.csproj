@@ -140,6 +140,7 @@
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Service\Controllers\AppContactsController.cs" />
     <Compile Include="Areas\Service\Controllers\BasicTypeController.cs" />
     <Compile Include="Areas\Service\Controllers\GroupNameController.cs" />
     <Compile Include="Areas\Service\Controllers\ManageController.cs" />
@@ -1927,6 +1928,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Service\Models\" />
+    <Folder Include="Areas\Service\Views\AppContacts\" />
     <Folder Include="Areas\Service\Views\Manage\" />
     <Folder Include="res\js\" />
   </ItemGroup>

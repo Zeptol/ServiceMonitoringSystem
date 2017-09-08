@@ -10,7 +10,7 @@ using ServiceMonitoringSystem.Web.Models;
 namespace ServiceMonitoringSystem.Web.Controllers
 {
     [Authorize]
-    public class StudentsSearchPagingController : BaseController
+    public class StudentsSearchPagingController : Controller
     {
         private StudentDbContext db = new StudentDbContext();
 

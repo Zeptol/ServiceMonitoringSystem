@@ -14,29 +14,12 @@ using ServiceMonitoringSystem.Web.Controllers;
 
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
-    public class GroupNameController : BaseController
+    public class GroupNameController : BaseController<GroupName>
     {
-        private readonly IMongoRepository<GroupName> _groupName;
-
-        public GroupNameController(IMongoRepository<GroupName> groupName)
+        public GroupNameController(IMongoRepository<GroupName> groupName):base(groupName)
         {
-            _groupName = groupName;
-        }
-        //
-        // GET: /Service/GroupName/
-        public ActionResult Index()
-        {
-            int count;
-            var list = _groupName.QueryByPage(0, PageSize, out count);
-            ViewBag.RecordCount = count;
-            ViewBag.PageSize = PageSize;
-            return View(list);
-        }
-
-        public AjaxResult DoSearch(FormCollection values)
-        {
-           UpdateGrid(values);
-            return UIHelper.Result();
+            Rep = groupName;
+            Updated += GroupNameController_Updated;
         }
         public ViewResult Create()
         {
@@ -44,7 +27,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var model = _groupName.Get(t => t._id== id);
+            var model = Rep.Get(t => t._id== id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -53,8 +36,8 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Delete(JArray selectedRows, FormCollection values)
         {
-            _groupName.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t._id));
-            UpdateGrid(values);
+            Rep.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t._id));
+            OnUpdated(values);
             return UIHelper.Result();
         }
 
@@ -72,10 +55,10 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                         }
                         else
                         {
-                            var max = (int) (_groupName.Max(t => t._id) ?? 0);
+                            var max = (int) (Rep.Max(t => t._id) ?? 0);
                             model._id = max + 1;
                             model.CreateDateTime = DateTime.Now;
-                            _groupName.Add(model);
+                            Rep.Add(model);
                             // 关闭本窗体（触发窗体的关闭事件）
                             PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
                         }
@@ -105,7 +88,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     }
                     else
                     {
-                        _groupName.Update(t => t._id == model._id,
+                        Rep.Update(t => t._id == model._id,
                             Builders<GroupName>.Update.Set(t => t.ServiceName, model.ServiceName)
                                 .Set(t => t.ServiceNameCN, model.ServiceNameCN)
                                 .Set(t => t.Remarks, model.Remarks));
@@ -121,7 +104,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             return UIHelper.Result();
         }
 
-        private void UpdateGrid(NameValueCollection values)
+        private void GroupNameController_Updated(NameValueCollection values)
         {
             var id = values["tbxId"];
             var serName = values["tbxServiceName"];
@@ -142,11 +125,11 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                         Builders<GroupName>.Filter.Regex(t => t.ServiceNameCN,
                             new BsonRegularExpression(new Regex(serName, RegexOptions.IgnoreCase)))));
             }
-            base.UpdateGrid(values, filter, _groupName);
+            UpdateGrid(values, filter);
         }
         private bool CheckRepeat(GroupName model)
         {
-            var modelDb = _groupName.Get(t => t._id == model._id || t.ServiceName == model.ServiceName);
+            var modelDb = Rep.Get(t => t._id == model._id || t.ServiceName == model.ServiceName);
             if (modelDb == null) return true;
             return model._id == modelDb._id;
         }
