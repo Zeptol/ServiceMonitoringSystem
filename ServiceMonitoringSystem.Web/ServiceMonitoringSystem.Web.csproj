@@ -1903,6 +1903,9 @@
     <Content Include="Areas\Service\Views\BasicType\Index.cshtml" />
     <Content Include="Areas\Service\Views\BasicType\Create.cshtml" />
     <Content Include="Areas\Service\Views\BasicType\Edit.cshtml" />
+    <Content Include="Areas\Service\Views\AppContacts\Index.cshtml" />
+    <Content Include="Areas\Service\Views\AppContacts\AddOrEdit.cshtml" />
+    <Content Include="Areas\Service\Views\Manage\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1928,8 +1931,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Service\Models\" />
-    <Folder Include="Areas\Service\Views\AppContacts\" />
-    <Folder Include="Areas\Service\Views\Manage\" />
     <Folder Include="res\js\" />
   </ItemGroup>
   <ItemGroup>

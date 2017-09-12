@@ -36,9 +36,9 @@
                   .ShowHeader(false)
                   .Items(
                       F.HiddenFieldFor(m => m._id),
-                      F.DropDownListFor(m => m.TypeId).Items(ViewBag.TypeList).Required(true).Label("类型"),
-                      F.TextBoxFor(m => m.Num).Required(true).Label("编号"),
-                      F.TextBoxFor(m => m.Name).Required(true).Label("名称")
+                      F.DropDownListFor(m => m.TypeId).Items(ViewBag.TypeList),
+                      F.TextBoxFor(m => m.Num),
+                      F.TextBoxFor(m => m.Name)
                   )
           )
           )

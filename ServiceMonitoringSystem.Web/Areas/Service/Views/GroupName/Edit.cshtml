@@ -36,9 +36,9 @@
                   .ShowHeader(false)
                   .Items(
                       F.HiddenFieldFor(m => m._id),
-                              F.TextBoxFor(m => m.ServiceName).Required(true).Label("服务名称"),
-                              F.TextBoxFor(m => m.ServiceNameCN).Required(true).Label("服务中文名"),
-                      F.TextBoxFor(m => m.Remarks).Label("备注")
+                      F.TextBoxFor(m => m.ServiceName),
+                      F.TextBoxFor(m => m.ServiceNameCN),
+                      F.TextBoxFor(m => m.Remarks)
                   )
           )
           )

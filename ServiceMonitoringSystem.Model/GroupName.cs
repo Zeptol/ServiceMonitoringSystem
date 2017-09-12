@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceMonitoringSystem.Model
 {
@@ -12,10 +13,14 @@ namespace ServiceMonitoringSystem.Model
         /// <summary>
         /// 服务名称
         /// </summary>
+        [Required]
+        [Display(Name = "服务名称")]
         public string ServiceName { set; get; }
         /// <summary>
         /// 服务中文名
         /// </summary>
+        [Required]
+        [Display(Name = "服务中文名")]
         public string ServiceNameCN { set; get; }
 
         /// <summary>
@@ -27,6 +32,7 @@ namespace ServiceMonitoringSystem.Model
         /// <summary>
         /// 备注
         /// </summary>
+      [Display(Name = "备注")]
         public string Remarks { set; get; }
     }
 }

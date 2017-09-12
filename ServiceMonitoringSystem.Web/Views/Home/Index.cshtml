@@ -130,7 +130,10 @@
                               F.TreeNode()
                                   .Text("服务管理")
                                   .Expanded(true)
-                                  .Nodes(
+                                          .Nodes(
+                                              F.TreeNode()
+                                                  .Text("服务管理")
+                                                  .NavigateUrl("~/Service/Manage"),
                                       F.TreeNode()
                                           .Text("服务名称管理")
                                           .NavigateUrl("~/Service/GroupName"),
