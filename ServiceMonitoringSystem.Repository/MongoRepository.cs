@@ -36,6 +36,12 @@ namespace ServiceMonitoringSystem.Repository
             return _collection.Find(filter).FirstOrDefault();
         }
 
+        public List<TField> Distinct<TField>(Expression<Func<T, TField>> field, Expression<Func<T, bool>> filter)
+        {
+            var queryFilter = filter ?? new FilterDefinitionBuilder<T>().Empty;
+            return _collection.Distinct(field, queryFilter).ToList();
+        }
+
         public object Max(Expression<Func<T, object>> sort)
         {
             var res = _collection.Find(new BsonDocument()).SortByDescending(sort).Limit(1);

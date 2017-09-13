@@ -9,6 +9,7 @@ namespace ServiceMonitoringSystem.IRepository
     {
         T Get(FilterDefinition<T> filter);
         T Get(Expression<Func<T, bool>> filter);
+        List<TField> Distinct<TField>(Expression<Func<T, TField>> field, Expression<Func<T, bool>> filter = null);
         object Max(Expression<Func<T, object>> sort);
 
         List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, FilterDefinition<T> filter = null,

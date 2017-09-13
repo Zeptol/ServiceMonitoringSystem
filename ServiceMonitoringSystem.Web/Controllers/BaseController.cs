@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FineUIMvc;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
+using ServiceMonitoringSystem.Common.Extensions;
 using ServiceMonitoringSystem.IRepository;
 
 namespace ServiceMonitoringSystem.Web.Controllers
@@ -83,17 +84,34 @@ namespace ServiceMonitoringSystem.Web.Controllers
             OnUpdated(values);
             return UIHelper.Result();
         }
-        protected void UpdateGrid(NameValueCollection values, List<FilterDefinition<T>> filter, string gridName = "Grid1")
+
+        protected void UpdateGrid(NameValueCollection values, List<FilterDefinition<T>> filter,
+            string gridName = "Grid1")
         {
             var fields = JArray.Parse(values[gridName + "_fields"]);
             var pageIndex = Convert.ToInt32(values[gridName + "_pageIndex"]);
+            var sortField = values[gridName + "_sortField"];
+            var sortDirection = values[gridName + "_sortDirection"];
             int count;
             var where = filter != null && filter.Any() ? Builders<T>.Filter.And(filter) : null;
-            var list = Rep.QueryByPage(pageIndex, PageSize, out count, where);
+            SortDefinition<T> sort = null;
+            if (!string.IsNullOrEmpty(sortField))
+            {
+                if (!string.IsNullOrEmpty(sortDirection))
+                {
+                    var exp = sortField.ToLambda<T>();
+                    if (sortDirection.Equals("ASC", StringComparison.CurrentCultureIgnoreCase))
+                        sort = Builders<T>.Sort.Ascending(exp);
+                    else if (sortDirection.Equals("DESC", StringComparison.CurrentCultureIgnoreCase))
+                        sort = Builders<T>.Sort.Descending(exp);
+                }
+            }
+            var list = Rep.QueryByPage(pageIndex, PageSize, out count, where, sort);
             var grid = UIHelper.Grid(gridName);
             grid.RecordCount(count);
             grid.DataSource(list, fields);
         }
 
+        public FieldDefinition<T> FieldDefinition { get; set; }
     }
 }

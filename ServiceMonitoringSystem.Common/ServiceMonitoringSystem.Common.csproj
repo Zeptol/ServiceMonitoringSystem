@@ -46,6 +46,7 @@
     <Compile Include="Enums\AlarmTypeEnum.cs" />
     <Compile Include="Enums\ServiceTypeEnum.cs" />
     <Compile Include="Extensions\CommonExtensions.cs" />
+    <Compile Include="Extensions\LambdaExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
