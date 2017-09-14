@@ -43,7 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICommon.cs" />
+    <Compile Include="ITree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceMonitoringSystem.Model\ServiceMonitoringSystem.Model.csproj">
+      <Project>{3A222665-FE5A-4E52-9C2D-D8160F9B1DBB}</Project>
+      <Name>ServiceMonitoringSystem.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

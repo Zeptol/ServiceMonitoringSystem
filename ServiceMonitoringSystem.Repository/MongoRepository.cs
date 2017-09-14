@@ -36,6 +36,15 @@ namespace ServiceMonitoringSystem.Repository
             return _collection.Find(filter).FirstOrDefault();
         }
 
+        public IFindFluent<T, T> Find(Expression<Func<T, bool>> filter)
+        {
+            return _collection.Find(filter ?? new FilterDefinitionBuilder<T>().Empty);
+        }
+        public IFindFluent<T, T> Find(FilterDefinition<T> filter)
+        {
+            return _collection.Find(filter ?? new FilterDefinitionBuilder<T>().Empty);
+        }
+
         public List<TField> Distinct<TField>(Expression<Func<T, TField>> field, Expression<Func<T, bool>> filter)
         {
             var queryFilter = filter ?? new FilterDefinitionBuilder<T>().Empty;

@@ -27,11 +27,11 @@
                   .BodyPadding(5)
                   .Items(
                       F.Tree()
-                          .ID("Tree1")
-                          .Width(200)
+                                          .ID("Tree1").Listener("nodeclick", "onNodeClick")
+                                  .Width(200).HideHScrollbar(false).HideVScrollbar(false)
                           .ShowHeader(false)
                           .EnableCollapse(true)
-                          .Nodes(new TreeNode[] {})
+                                  .Nodes(ViewBag.TreeNodes)
                   ),
               F.Panel()
                   .ID("panelCenterRegion")
@@ -84,7 +84,7 @@
                           .DataIDField("_id")
                           .DataTextField("Name")
                           .EnableCheckBoxSelect(true)
-                          .AllowPaging(true).AllowSorting(true).OnSort(Url.Action("Grid1_Sort"), "Grid1")
+                          .AllowPaging(true).AllowSorting(true).OnSort(Url.Action("DoSearch"), "Grid1")
                           .PageSize(ViewBag.PageSize)
                           .IsDatabasePaging(true)
                           .OnPageIndexChanged(Url.Action("DoSearch"), "Form1,Grid1")
@@ -167,7 +167,6 @@
           )
           )
 
-
     @(F.Window()
           .ID("Window1")
           .Width(600)
@@ -187,6 +186,21 @@
 @section script {
 
     <script>
+        function onNodeClick(event, nodeId) {
+            var tree = this;
+            if (nodeId!=='') {
+                var nodeData = tree.getNodeData(nodeId);
+                // 触发后台事件
+                F.doPostBack('@Url.Action("DoSearch")',
+                {
+                    nodeId: nodeId,
+                    nodeText: nodeData.text,
+                    ddlHost: $("#ddlHost-inputEl").val(),
+                    tbxKey: $("#tbxKey-inputEl").val(),
+                    rblApprove: $("#rblApprove").val()
+            });
+            }
+        }
 
         function renderInIp(value) {
             if (value === '') return null;

@@ -9,6 +9,8 @@ namespace ServiceMonitoringSystem.IRepository
     {
         T Get(FilterDefinition<T> filter);
         T Get(Expression<Func<T, bool>> filter);
+        IFindFluent<T, T> Find(Expression<Func<T, bool>> filter);
+        IFindFluent<T, T> Find(FilterDefinition<T> filter = null);
         List<TField> Distinct<TField>(Expression<Func<T, TField>> field, Expression<Func<T, bool>> filter = null);
         object Max(Expression<Func<T, object>> sort);
 

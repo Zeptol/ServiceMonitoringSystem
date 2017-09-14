@@ -19,7 +19,6 @@ namespace ServiceMonitoringSystem.Web.Controllers
         protected delegate void UpdateGridHandler(NameValueCollection values);
 
         protected event UpdateGridHandler Updated;
-
         protected virtual void OnUpdated(NameValueCollection values)
         {
             if (Updated != null) Updated.Invoke(values);
@@ -78,18 +77,19 @@ namespace ServiceMonitoringSystem.Web.Controllers
             ViewBag.PageSize = PageSize;
             return View(list);
         }
-
+        [HttpPost]
         public virtual ActionResult DoSearch(FormCollection values)
         {
             OnUpdated(values);
             return UIHelper.Result();
         }
 
-        protected void UpdateGrid(NameValueCollection values, List<FilterDefinition<T>> filter,
+        protected void UpdateGrid(NameValueCollection values, List<FilterDefinition<T>> filter,JArray fieldsJArray=null,
             string gridName = "Grid1")
         {
-            var fields = JArray.Parse(values[gridName + "_fields"]);
-            var pageIndex = Convert.ToInt32(values[gridName + "_pageIndex"]);
+            var fieldsStr = values[gridName + "_fields"];
+            var fields = fieldsJArray ?? JArray.Parse(fieldsStr);
+            var pageIndex = Convert.ToInt32(values[gridName + "_pageIndex"]??"0");
             var sortField = values[gridName + "_sortField"];
             var sortDirection = values[gridName + "_sortDirection"];
             int count;
