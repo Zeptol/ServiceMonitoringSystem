@@ -21,11 +21,10 @@ namespace ServiceMonitoringSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult btnLogin_Click(string tbxUserName, string tbxPassword)
         {
-            var helper=new CommonHelper();
             var filter =
                 Builders<User>.Filter.And(
                     Builders<User>.Filter.Regex(t => t.UserPwd,
-                        new BsonRegularExpression(new Regex(helper.GetMd5(tbxPassword), RegexOptions.IgnoreCase))),
+                        new BsonRegularExpression(new Regex(CommonHelper.GetMd5(tbxPassword), RegexOptions.IgnoreCase))),
                     Builders<User>.Filter.Eq(t => t.UserName, tbxUserName));
             if (Rep.Get(filter) != null)
             {

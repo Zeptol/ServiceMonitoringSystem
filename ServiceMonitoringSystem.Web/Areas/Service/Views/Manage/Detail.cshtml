@@ -1,0 +1,287 @@
+﻿@{
+    ViewBag.Title = "Detail";
+    var F = Html.F();
+}
+@model ServiceEntity
+@section head {
+    <style>
+        .mypanel {
+            display: inline-block !important;
+            margin-right: 5px;
+            width: 30% !important;
+            height: 80px !important
+        }
+        .mainPanel {
+            width: 100%
+        }
+    </style>
+}
+
+@section body {
+
+    @(F.Panel()
+          .ID("detailPanel")
+          .Title("服务详细").CssClass("mainPanel")
+          .EnableCollapse(true)
+          .BodyPadding(5)
+          .ShowBorder(true)
+          .ShowHeader(true)
+          .Items(F.Panel()
+              .Title("一级服务名称")
+              .CssClass("mypanel")
+              .BodyPadding(5)
+              .ShowBorder(true).Items(F.Label().Text(Model.ServiceName)),
+              F.Panel()
+                  .Title("二级服务名称")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.SecondaryName)),
+              F.Panel()
+                  .Title("一级服务ID")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.PrimaryId.ToString())),
+              F.Panel()
+                  .Title("二级服务ID")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.SecondaryId.ToString())),
+              F.Panel()
+                  .Title("所在主机地址")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.Host)),
+              F.Panel()
+                  .Title("内网地址")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(string.Join(",", ViewBag.InList))),
+              F.Panel()
+                  .Title("外网地址")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(string.Join(",", ViewBag.OutList))),
+              F.Panel()
+                  .Title("版本")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.Version)),
+              F.Panel()
+                  .Title("是否审核")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.IsApproved ? "√" : "×")),
+              F.Panel()
+                  .Title("是否启用报警")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.IsAlert ? "√" : "×")),
+              F.Panel()
+                  .Title("最近启动时间")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.StartupDate.ToString("yyyy/mm/dd HH:mm:ss"))),
+              F.Panel()
+                  .Title("备注")
+                  .CssClass("mypanel")
+                  .BodyPadding(5)
+                  .ShowBorder(true).Items(F.Label().Text(Model.Remark))
+          )
+          )
+    <br>
+
+    @(F.Panel()
+          .Title("报警通知人")
+          .Layout(LayoutType.Fit).CssClass("mainPanel")
+          .EnableCollapse(true)
+          .BodyPadding(5)
+          .ShowBorder(true)
+          .ShowHeader(true)
+          .Items(
+              F.Form()
+                  .ID("Form2")
+                  .ShowBorder(true)
+                  .BodyPadding(5)
+                  .ShowHeader(false)
+                  .Title("表单")
+                  .Rows(
+                      F.FormRow()
+                          .Items(
+                              F.Label()
+                                  .ID("Label1")
+                                  .Label("文本")
+                                  .Text("文本内容")
+                          ),
+                      F.FormRow()
+                          .Items(
+                              F.TextBox()
+                                  .ID("TextBox1")
+                                  .Label("输入框"),
+                              F.Button()
+                                  .ID("Button1")
+                                  .Text("按钮")
+                          )
+                  )
+          )
+          )
+    <br>
+
+    @(F.Panel()
+          .Title("文件列表")
+          .Layout(LayoutType.Fit).CssClass("mainPanel")
+          .EnableCollapse(true)
+          .BodyPadding(5)
+          .ShowBorder(true)
+          .ShowHeader(true)
+          .Toolbars(
+              F.Toolbar()
+                  .ID("Toolbar1")
+                  .Items(
+                      F.Button()
+                          .ID("btnDeleteSelected")
+                          .Icon(Icon.Delete)
+                          .Text("删除选中记录")
+                          .Listener("click", "onFileDeleteSelectedClick"),
+                      F.Button()
+                          .ID("btnUpload")
+                          .Icon(Icon.DiskUpload)
+                          .Text("上传")
+                          .Listener("click", "onUploadClick")
+                  )
+          )
+          .Items(
+              F.Grid()
+                  .EnableCollapse(true)
+                  .Title("文件列表")
+                  .ShowHeader(false)
+                  .ShowBorder(true)
+                  .ID("GridFiles")
+                  .DataIDField("Rid")
+                  .DataTextField("Name").EnableCheckBoxSelect(true)
+                  .AllowPaging(true).PageSize(ViewBag.PageSize)
+                  .IsDatabasePaging(true)
+                  .Columns(
+                      F.RowNumberField(),
+                      F.RenderField()
+                          .HeaderText("文件名")
+                          .DataField("FileName")
+                          .Width(200),
+                      F.RenderField()
+                          .HeaderText("文件大小（字节）")
+                          .DataField("Size")
+                          .FieldType(FieldType.Int).Width(200),
+                      F.RenderField()
+                          .HeaderText("上传人")
+                          .DataField("Author").Width(200),
+                      F.RenderField()
+                          .HeaderText("上传时间")
+                          .DataField("DateTime")
+                          .FieldType(FieldType.Date).Renderer(Renderer.Date).RendererArgument("yyyy-mm-dd HH:mm:ss")
+                          .ExpandUnusedSpace(true),
+                      F.RenderField()
+                          .HeaderText("")
+                          .Width(30)
+                          .RendererFunction("renderFileDeleteField")
+                          .TextAlign(TextAlign.Center)
+                          .EnableHeaderMenu(false)
+                          .EnableColumnHide(false),
+                      F.RenderField()
+                          .HeaderText("")
+                          .Width(30)
+                          .RendererFunction("renderFileDownloadField")
+                          .TextAlign(TextAlign.Center)
+                          .EnableHeaderMenu(false)
+                          .EnableColumnHide(false)
+                  ).RecordCount(ViewBag.RecordCount)
+                  .DataSource(ViewBag.FileList)
+          ))
+
+@(F.Window()
+          .ID("Window1")
+          .Width(600)
+          .Height(300)
+          .IsModal(true)
+          .Hidden(true)
+          .Target(Target.Top)
+          .EnableResize(true)
+          .EnableMaximize(true)
+          .EnableIFrame(true)
+          .IFrameUrl(Url.Content("about:blank"))
+          .OnClose(Url.Action("RefreshFileList"), "GridFiles")
+)
+}
+@section script{
+    <script>
+
+        function renderFileDeleteField(value, params) {
+            return '<a href="javascript:;" class="deletefield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/delete.png")"></a>';
+        }
+
+        function renderFileDownloadField(parameters) {
+            return '<a href="javascript:;" class="downloadfield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/disk_download.png")"></a>';
+        }
+
+        function onUploadClick(parameters) {
+            F.ui.Window1.show('@Url.Content("~/Service/Manage/UploadFile?sec=")'+'@ViewBag.SecondaryId', '上传文件');
+        }
+
+        function onFileDeleteSelectedClick(event) {
+            var gridFile = F.ui.GridFiles;
+            if (!gridFile.hasSelection()) {
+                F.alert('请至少选择一项！');
+                return;
+            }
+
+            var selectedRows = gridFile.getSelectedRows();
+            console.log(selectedRows);
+            F.confirm({
+                message: '你确定要删除选中的&nbsp;<b>' + selectedRows.length + '</b>&nbsp;行数据吗？',
+                target: '_top',
+                ok: function() {
+                    deleteFileSelectedRows(selectedRows);
+                }
+            });
+        }
+
+        function deleteFileSelectedRows(selectedRows) {
+            // 触发后台事件
+            F.doPostBack('@Url.Action("DeleteFile")',
+                'GridFiles',
+                {
+                    'selectedRows': selectedRows
+                });
+        }
+
+
+        F.ready(function() {
+            var gridFile = F.ui.GridFiles;
+            gridFile.el.on('click',
+                'a.deletefield',
+                function(event) {
+                    var rowEl = $(this).closest('.f-grid-row');
+                    var rowData = gridFile.getRowData(rowEl);
+                    console.log(rowData);
+                    F.confirm({
+                        message: '你确定要删除选中的行数据吗？',
+                        target: '_top',
+                        ok: function() {
+                            deleteFileSelectedRows([rowData.id]);
+                        }
+                    });
+                });
+
+            gridFile.el.on('click',
+                'a.downloadfield',
+                function(event) {
+                    var rowEl = $(this).closest('.f-grid-row');
+                    var rowData = gridFile.getRowData(rowEl);
+                    console.log(rowData);
+                    window.location.href = '@Url.Content("~/Service/Manage/DownloadFile/")'+rowData.id;
+                    window.location.target = "_blank";
+                });
+
+
+        });
+
+    </script>
+}

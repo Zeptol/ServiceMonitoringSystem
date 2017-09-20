@@ -61,7 +61,7 @@ namespace ServiceMonitoringSystem.Repository
             SortDefinition<T> sort)
         {
             var queryFilter = filter ?? new FilterDefinitionBuilder<T>().Empty;
-            rowCount = (int)_collection.Count(queryFilter);
+            rowCount = Convert.ToInt32(_collection.Count(queryFilter));
             var res = _collection.Find(queryFilter);
             if (sort != null)
                 res = res.Sort(sort);

@@ -96,6 +96,11 @@
                                           .Icon(Icon.Delete)
                                           .Text("删除选中记录")
                                           .Listener("click", "onDeleteSelectedClick"),
+                                                  F.Button()
+                                                  .ID("btnExport")
+                                                  .Icon(Icon.PageExcel)
+                                                  .Text("导出")
+                                                          .Listener("click", "onExportClick"),
                                       F.ToolbarFill(),
                                       F.Button()
                                           .ID("btnCreate")
@@ -151,6 +156,13 @@
                                   .TextAlign(TextAlign.Center)
                                   .EnableHeaderMenu(false)
                                   .EnableColumnHide(false),
+                                          F.RenderField()
+                                          .HeaderText("")
+                                          .Width(30)
+                                          .RendererFunction("renderDetailField")
+                                          .TextAlign(TextAlign.Center)
+                                          .EnableHeaderMenu(false)
+                                          .EnableColumnHide(false),
                               F.RenderField()
                                   .HeaderText("")
                                   .Width(30)
@@ -186,107 +198,126 @@
 @section script {
 
     <script>
-        function onNodeClick(event, nodeId) {
-            var tree = this;
-            if (nodeId!=='') {
-                var nodeData = tree.getNodeData(nodeId);
-                // 触发后台事件
-                F.doPostBack('@Url.Action("DoSearch")',
-                {
-                    nodeId: nodeId,
-                    nodeText: nodeData.text,
-                    ddlHost: $("#ddlHost-inputEl").val(),
-                    tbxKey: $("#tbxKey-inputEl").val(),
-                    rblApprove: $("#rblApprove").val()
+    function onNodeClick(event, nodeId) {
+        var tree = this;
+        if (nodeId !== '') {
+            var nodeData = tree.getNodeData(nodeId);
+            // 触发后台事件
+            F.doPostBack('@Url.Action("DoSearch")',
+            {
+                nodeId: nodeId,
+                nodeText: nodeData.text,
+                ddlHost: $("#ddlHost-inputEl").val(),
+                tbxKey: $("#tbxKey-inputEl").val(),
+                rblApprove: $("#rblApprove").val()
             });
-            }
         }
+    }
 
-        function renderInIp(value) {
-            if (value === '') return null;
-            var content = $.parseJSON( value);
-            var ips = content.InAddr;
-            return ips.join(',');
-        }
-        function renderOutIp(value) {
-            if (value === '') return null;
-            var content = $.parseJSON(value);
-            var ips = content.OutAddr;
-            return ips.join(',');
-        }
+    function renderInIp(value) {
+        if (value === '') return null;
+        var content = $.parseJSON(value);
+        var ips = content.InAddr;
+        return ips.join(',');
+    }
+    function renderOutIp(value) {
+        if (value === '') return null;
+        var content = $.parseJSON(value);
+        var ips = content.OutAddr;
+        return ips.join(',');
+    }
 
-        @*function renderBoolean(value) {
+    @*function renderBoolean(value) {
             var iconUrl = value === true ? '@Url.Content(IconHelper.GetIconUrl(Icon.BulletTick))' : '@Url.Content(IconHelper.GetIconUrl(Icon.BulletCross))';
             return '<img src=\"'+iconUrl+'\"/>';
         }*@
 
-        function renderDeleteField(value, params) {
-            return '<a href="javascript:;" class="deletefield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/delete.png")"></a>';
-        }
+    function renderDeleteField(value, params) {
+        return '<a href="javascript:;" class="deletefield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/delete.png")"></a>';
+    }
 
-        function renderEditField(value, params) {
-            return '<a href="javascript:;" class="editfield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/pencil.png")"></a>';
-        }
+    function renderEditField(value, params) {
+        return '<a href="javascript:;" class="editfield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/pencil.png")"></a>';
+    }
 
-        function onCreateClick(event) {
-            F.ui.Window1.show('@Url.Content("~/Service/AppContacts/AddOrEdit")', '新增联系人');
-        }
+    function renderDetailField() {
+        return '<a href="javascript:;" class="detailfield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/application_view_detail.png")"></a>';
+    }
+    function onCreateClick(event) {
+        F.ui.Window1.show('@Url.Content("~/Service/Manage/AddOrEdit")', '新增服务');
+    }
 
+    function onExportClick() {
+        window.location.href = '@Url.Action("ExportToExcel")';
+    }
 
-        function deleteSelectedRows(selectedRows) {
-            // 触发后台事件
-            F.doPostBack('@Url.Action("Delete")',
-                'Form1,Grid1',
-                {
-                    'selectedRows': selectedRows
-                });
-        }
-
-        function onDeleteSelectedClick(event) {
-            var grid1 = F.ui.Grid1;
-
-            if (!grid1.hasSelection()) {
-                F.alert('请至少选择一项！');
-                return;
-            }
-
-            var selectedRows = grid1.getSelectedRows();
-            console.log(selectedRows);
-            F.confirm({
-                message: '你确定要删除选中的&nbsp;<b>' + selectedRows.length + '</b>&nbsp;行数据吗？',
-                target: '_top',
-                ok: function () {
-                    deleteSelectedRows(selectedRows);
-                }
+    function deleteSelectedRows(selectedRows) {
+        // 触发后台事件
+        F.doPostBack('@Url.Action("Delete")',
+            'Form1,Grid1',
+            {
+                'selectedRows': selectedRows
             });
+    }
+
+    function onDeleteSelectedClick(event) {
+        var grid1 = F.ui.Grid1;
+
+        if (!grid1.hasSelection()) {
+            F.alert('请至少选择一项！');
+            return;
         }
 
-        F.ready(function () {
+        var selectedRows = grid1.getSelectedRows();
+        console.log(selectedRows);
+        F.confirm({
+            message: '你确定要删除选中的&nbsp;<b>' + selectedRows.length + '</b>&nbsp;行数据吗？',
+            target: '_top',
+            ok: function () {
+                deleteSelectedRows(selectedRows);
+            }
+        });
+    }
 
-            var grid1 = F.ui.Grid1;
+    F.ready(function () {
 
-            grid1.el.on('click',
-                'a.deletefield',
-                function (event) {
-                    var rowEl = $(this).closest('.f-grid-row');
-                    var rowData = grid1.getRowData(rowEl);
-                    console.log(rowData);
-                    F.confirm({
-                        message: '你确定要删除选中的行数据吗？',
-                        target: '_top',
-                        ok: function () {
-                            deleteSelectedRows([rowData.id]);
-                        }
-                    });
+        var grid1 = F.ui.Grid1;
+
+        grid1.el.on('click',
+            'a.deletefield',
+            function (event) {
+                var rowEl = $(this).closest('.f-grid-row');
+                var rowData = grid1.getRowData(rowEl);
+                console.log(rowData);
+                F.confirm({
+                    message: '你确定要删除选中的行数据吗？',
+                    target: '_top',
+                    ok: function () {
+                        deleteSelectedRows([rowData.id]);
+                    }
                 });
+            });
 
-            grid1.el.on('click',
-                'a.editfield',
-                function (event) {
-                    var rowEl = $(this).closest('.f-grid-row');
-                    var rowData = grid1.getRowData(rowEl);
+        grid1.el.on('click',
+            'a.editfield',
+            function (event) {
+                var rowEl = $(this).closest('.f-grid-row');
+                var rowData = grid1.getRowData(rowEl);
 
-                    F.ui.Window1.show('@Url.Content("~/Service/AppContacts/AddOrEdit/")?id=' + rowData.id, '编辑联系人');
+                F.ui.Window1.show('@Url.Content("~/Service/Manage/AddOrEdit/")?id=' + rowData.id, '编辑服务');
+            });
+
+        grid1.el.on('click',
+            'a.detailfield',
+            function (event) {
+                var rowEl = $(this).closest('.f-grid-row');
+                var rowData = grid1.getRowData(rowEl);
+                    parent.addExampleTab({
+                        id: 'serviceDetail_tab',
+                        iframeUrl: '@Url.Content("~/Service/Manage/Detail/")' + rowData.id,
+                        title: '服务详情',
+                        refreshWhenExist: true
+                    });
                 });
 
         });

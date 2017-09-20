@@ -54,7 +54,9 @@
   <ItemGroup>
     <Compile Include="AppContacts.cs" />
     <Compile Include="BasicType.cs" />
+    <Compile Include="FileEntity.cs" />
     <Compile Include="GroupName.cs" />
+    <Compile Include="ServiceConf.cs" />
     <Compile Include="ServiceEntity.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

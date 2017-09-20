@@ -142,10 +142,7 @@
                                           .NavigateUrl("~/Service/BasicType"),
                                       F.TreeNode()
                                           .Text("联系人")
-                                          .NavigateUrl("~/Service/AppContacts"),
-                                      F.TreeNode()
-                                          .Text("学生管理（搜索和分页）")
-                                          .NavigateUrl("~/StudentsSearchPaging")
+                                          .NavigateUrl("~/Service/AppContacts")
                                   )
                           )
                   ),
@@ -167,7 +164,22 @@
                                   .Layout(LayoutType.Fit)
                                   .Icon(Icon.House)
                                   .ContentEl("#maincontent")
-                          )
+                                  ).Tools(
+                            F.Tool()
+                                .ID("toolRefresh")
+                                .ToolTip("刷新本页")
+                                .CssClass("tabtool")
+                                .MarginRight(5)
+                                .IconFont(IconFont.Refresh)
+                                .Listener("click", "onToolRefreshClick"),
+                            F.Tool()
+                                .ID("toolNewWindow")
+                                .ToolTip("在新标签页中打开")
+                                .CssClass("tabtool")
+                                .MarginRight(5)
+                                .IconFont(IconFont.Share)
+                                .Listener("click", "onToolNewWindowClick")
+                        )
                   )
           )
           )
@@ -198,6 +210,54 @@
             F.ui.windowThemeRoller.show();
         }
 
+        // 点击标题栏工具图标 - 刷新
+        function onToolRefreshClick(event) {
+            var mainTabStrip = F.ui.mainTabStrip;
+
+            var activeTab = mainTabStrip.getActiveTab();
+            if (activeTab.iframe) {
+                var iframeWnd = activeTab.getIFrameWindow();
+                iframeWnd.location.reload();
+            }
+        }
+
+        // 点击标题栏工具图标 - 在新标签页中打开
+        function onToolNewWindowClick(event) {
+            var mainTabStrip = F.ui.mainTabStrip;
+
+            var activeTab = mainTabStrip.getActiveTab();
+            if (activeTab.iframe) {
+                var iframeUrl = activeTab.getIFrameUrl();
+                iframeUrl = iframeUrl.replace(/Mobile\/\?file=/ig, '');
+                window.open(iframeUrl, '_blank');
+            }
+        }
+
+
+        // 添加示例标签页
+        // id： 选项卡ID
+        // iframeUrl: 选项卡IFrame地址
+        // title： 选项卡标题
+        // icon： 选项卡图标
+        // createToolbar： 创建选项卡前的回调函数（接受tabOptions参数）
+        // refreshWhenExist： 添加选项卡时，如果选项卡已经存在，是否刷新内部IFrame
+        // iconFont： 选项卡图标字体
+        function addExampleTab(tabOptions) {
+
+            if (typeof (tabOptions) === 'string') {
+                tabOptions = {
+                    id: arguments[0],
+                    iframeUrl: arguments[1],
+                    title: arguments[2],
+                    icon: arguments[3],
+                    createToolbar: arguments[4],
+                    refreshWhenExist: arguments[5],
+                    iconFont: arguments[6]
+                };
+            }
+
+            F.addMainTab(F.ui.mainTabStrip, tabOptions);
+        }
 
         // 页面控件初始化完毕后，会调用用户自定义的onReady函数
         F.ready(function () {

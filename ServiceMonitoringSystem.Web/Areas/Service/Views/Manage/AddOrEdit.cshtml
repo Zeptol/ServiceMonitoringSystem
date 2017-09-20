@@ -1,0 +1,52 @@
+﻿@{
+    var F = Html.F();
+}
+
+@model ServiceEntity
+
+@section body {
+
+    @(F.Panel()
+          .ID("Panel1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .BodyPadding(10)
+          .AutoScroll(true)
+          .IsViewPort(true)
+          .Toolbars(
+              F.Toolbar()
+                  .Items(
+                      F.Button()
+                          .Icon(Icon.SystemClose)
+                          .Text("关闭")
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.ToolbarSeparator(),
+                      Model == null ?
+                          F.Button()
+                              .ValidateForms("SimpleForm1")
+                              .Icon(Icon.SystemSaveClose)
+                              .OnClick(Url.Action("AddOrEdit"), "SimpleForm1", new Parameter("isAdd", "true"))
+                              .Text("保存后关闭") : F.Button()
+                                  .ValidateForms("SimpleForm1")
+                                  .Icon(Icon.SystemSaveClose)
+                                  .OnClick(Url.Action("AddOrEdit"), "SimpleForm1")
+                                  .Text("保存后关闭")
+                  )
+          )
+          .Items(
+              F.SimpleForm()
+                  .ID("SimpleForm1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .Items(
+                      Model == null ? new HiddenFieldExtension(new HiddenField()) : F.HiddenFieldFor(m => m._id),
+                      F.DropDownListFor(t=>t.ServiceName).Items(ViewBag.ServiceList),
+                      F.TextBoxFor(m => m.SecondaryName),
+                      F.TextBoxFor(m => m.Host),
+                      F.TextBoxFor(m => m.Version),
+                      
+                      F.TextBoxFor(m => m.Remark)
+                  )
+          ))
+
+}

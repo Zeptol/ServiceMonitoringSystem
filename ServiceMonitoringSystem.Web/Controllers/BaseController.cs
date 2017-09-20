@@ -107,11 +107,42 @@ namespace ServiceMonitoringSystem.Web.Controllers
                 }
             }
             var list = Rep.QueryByPage(pageIndex, PageSize, out count, where, sort);
+            // 导出用
+            Session["list"] = list;
             var grid = UIHelper.Grid(gridName);
             grid.RecordCount(count);
             grid.DataSource(list, fields);
         }
 
-        public FieldDefinition<T> FieldDefinition { get; set; }
+        #region 上传文件类型判断
+
+        protected readonly List<string> ValidFileTypes = new List<string>
+        {
+            "zip",
+            "rar",
+            "tar",
+            "7z",
+            "jar",
+            "cab",
+            "iso",
+            "ace"
+        };
+
+        protected bool ValidateFileType(string fileName)
+        {
+            var fileType = string.Empty;
+            var lastDotIndex = fileName.LastIndexOf(".", StringComparison.Ordinal);
+            if (lastDotIndex >= 0)
+            {
+                fileType = fileName.Substring(lastDotIndex + 1).ToLower();
+            }
+
+            return ValidFileTypes.Contains(fileType);
+        }
+
+
+        #endregion
+
+
     }
 }

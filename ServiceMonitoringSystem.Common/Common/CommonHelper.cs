@@ -13,7 +13,7 @@ namespace ServiceMonitoringSystem.Common.Common
         /// <param name="str">需转的字符串</param>
         /// <param name="isLower">是否32位小写  默认32位大写</param>
         /// <returns></returns>
-        public string GetMd5(string str, bool isLower = false)
+        public static string GetMd5(string str, bool isLower = false)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace ServiceMonitoringSystem.Common.Common
         /// </summary>
         /// <param name="inputStream">输入流</param>
         /// <returns></returns>
-        public string GetMd5(Stream inputStream)
+        public static string GetMd5(Stream inputStream)
         {
             try
             {

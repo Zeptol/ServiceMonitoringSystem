@@ -1906,6 +1906,9 @@
     <Content Include="Areas\Service\Views\AppContacts\Index.cshtml" />
     <Content Include="Areas\Service\Views\AppContacts\AddOrEdit.cshtml" />
     <Content Include="Areas\Service\Views\Manage\Index.cshtml" />
+    <Content Include="Areas\Service\Views\Manage\AddOrEdit.cshtml" />
+    <Content Include="Areas\Service\Views\Manage\Detail.cshtml" />
+    <Content Include="Areas\Service\Views\Manage\UploadFile.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

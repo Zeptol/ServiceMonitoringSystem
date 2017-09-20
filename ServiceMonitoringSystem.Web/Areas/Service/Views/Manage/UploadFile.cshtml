@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "UploadFile";
+    var F = @Html.F();
+}
+@section body {
+    @(F.SimpleForm()
+        .ID("SimpleForm1")
+        .BodyPadding(5)
+        .Width(550)
+        .EnableCollapse(true)
+        .ShowBorder(true)
+        .Title("表单")
+        .ShowHeader(true)
+        .Items(
+            F.FileUpload()
+                .ID("file")
+                .EmptyText("请选择文件")
+                .Label("文件")
+                .Required(true)
+                .ShowRedStar(true),
+            F.Button()
+                .ID("btnSubmit")
+                                .OnClick(Url.Content("~/Service/Manage/UploadFile?SecondaryId=") + ViewBag.SecondaryId, "SimpleForm1")
+                .ValidateForms("SimpleForm1")
+                .Text("上传")
+        )
+    )
+}
+
