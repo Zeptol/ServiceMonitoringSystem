@@ -74,6 +74,10 @@ namespace ServiceMonitoringSystem.Repository
             _collection.InsertOne(model);
         }
 
+        public void BulkInsert(List<T> list)
+        {
+            _collection.InsertMany(list);
+        }
         public T Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
         {
             var res = _collection.FindOneAndUpdate(filter, update);

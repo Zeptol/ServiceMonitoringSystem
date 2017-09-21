@@ -17,6 +17,7 @@ namespace ServiceMonitoringSystem.IRepository
         List<T> QueryByPage(int pageIndex, int pageSize, out int rowCount, FilterDefinition<T> filter = null,
             SortDefinition<T> sort = null);
         void Add(T model);
+        void BulkInsert(List<T> list);
         T Update(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);
         long Delete(Expression<Func<T, bool>> filter);
     }

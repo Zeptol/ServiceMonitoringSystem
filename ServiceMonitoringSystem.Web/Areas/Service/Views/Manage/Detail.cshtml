@@ -98,30 +98,78 @@
           .ShowBorder(true)
           .ShowHeader(true)
           .Items(
-              F.Form()
-                  .ID("Form2")
-                  .ShowBorder(true)
-                  .BodyPadding(5)
-                  .ShowHeader(false)
-                  .Title("表单")
-                  .Rows(
-                      F.FormRow()
-                          .Items(
-                              F.Label()
-                                  .ID("Label1")
-                                  .Label("文本")
-                                  .Text("文本内容")
-                          ),
-                      F.FormRow()
-                          .Items(
-                              F.TextBox()
-                                  .ID("TextBox1")
-                                  .Label("输入框"),
-                              F.Button()
-                                  .ID("Button1")
-                                  .Text("按钮")
+                      F.Grid()
+                          .BoxFlex(1)
+                          .ShowHeader(false)
+                          .ShowBorder(true)
+                                  .ID("GridAlertContacts")
+                          .DataIDField("_id")
+                          .DataTextField("Name")
+                          .EnableCheckBoxSelect(true)
+                          .AllowPaging(true)
+                          .PageSize(ViewBag.PageSize)
+                          .IsDatabasePaging(true)
+                                          .OnPageIndexChanged(Url.Content("~/Service/Manage/RefreshAlertContactsList?id=") + ViewBag.ServiceId, "GridAlertContacts")
+                          .Toolbars(
+                              F.Toolbar()
+                                  .Items(
+                                      F.Button()
+                                                  .ID("btnContactsDeleteSelected")
+                                          .Icon(Icon.Delete)
+                                          .Text("删除选中记录")
+                                                  .Listener("click", "onContactsDeleteSelectedClick"),
+                                      F.Button()
+                                                  .ID("btnContactsCreate")
+                                          .Icon(Icon.Add)
+                                          .Text("添加")
+                                                  .Listener("click", "onContactsCreateClick"),
+                                                          F.Button()
+                                                          .ID("btnSync")
+                                                  .Icon(Icon.Build)
+                                                  .Text("同步到主服务")
+                                                          .Listener("click", "onSyncClick")
+                                  )
                           )
-                  )
+                          .Columns(
+                              F.RowNumberField(),
+                              F.RenderField()
+                                  .HeaderText("姓名")
+                                          .DataField("UserName"),
+                              F.RenderField()
+                                  .HeaderText("手机号")
+                                  .DataField("Tel"),
+                              F.RenderField()
+                                          .HeaderText("邮箱")
+                                  .DataField("Email"),
+                              F.RenderField()
+                                          .HeaderText("企业微信号UID").Width(120)
+                                  .DataField("WeiXin_UID"),
+                              F.RenderField()
+                                          .HeaderText("企业钉钉号UID").Width(120)
+                                  .DataField("DingTalk_UID"),
+                              F.RenderField()
+                                          .HeaderText("报警通知方式").Width(100)
+                                  .DataField("AlarmType"),
+                              F.RenderField()
+                                  .HeaderText("备注")
+                                  .DataField("Remark").ExpandUnusedSpace(true),
+                              F.RenderField()
+                                  .HeaderText("")
+                                  .Width(60)
+                                          .RendererFunction("renderContactsEditField")
+                                  .TextAlign(TextAlign.Center)
+                                  .EnableHeaderMenu(false)
+                                  .EnableColumnHide(false),
+                              F.RenderField()
+                                  .HeaderText("")
+                                  .Width(60)
+                                          .RendererFunction("renderContactsDeleteField")
+                                  .TextAlign(TextAlign.Center)
+                                  .EnableHeaderMenu(false)
+                                  .EnableColumnHide(false)
+                          )
+                                          .RecordCount(ViewBag.RecordCountContacts)
+                                  .DataSource(ViewBag.AlertContactsList)
           )
           )
     <br>
@@ -159,7 +207,7 @@
                   .DataIDField("Rid")
                   .DataTextField("Name").EnableCheckBoxSelect(true)
                   .AllowPaging(true).PageSize(ViewBag.PageSize)
-                  .IsDatabasePaging(true)
+                                          .IsDatabasePaging(true).OnPageIndexChanged(Url.Content("~/Service/Manage/RefreshFileList?SecondaryId=") + ViewBag.SecondaryId, "GridFiles")
                   .Columns(
                       F.RowNumberField(),
                       F.RenderField()
@@ -176,7 +224,7 @@
                       F.RenderField()
                           .HeaderText("上传时间")
                           .DataField("DateTime")
-                          .FieldType(FieldType.Date).Renderer(Renderer.Date).RendererArgument("yyyy-mm-dd HH:mm:ss")
+                          .FieldType(FieldType.Date).Renderer(Renderer.Date).RendererArgument("yyyy-MM-dd HH:mm:ss")
                           .ExpandUnusedSpace(true),
                       F.RenderField()
                           .HeaderText("")
@@ -192,12 +240,12 @@
                           .TextAlign(TextAlign.Center)
                           .EnableHeaderMenu(false)
                           .EnableColumnHide(false)
-                  ).RecordCount(ViewBag.RecordCount)
+                                  ).RecordCount(ViewBag.RecordCountFiles)
                   .DataSource(ViewBag.FileList)
           ))
-
-@(F.Window()
-          .ID("Window1")
+    
+    @(F.Window()
+          .ID("WindowContacts")
           .Width(600)
           .Height(300)
           .IsModal(true)
@@ -207,11 +255,69 @@
           .EnableMaximize(true)
           .EnableIFrame(true)
           .IFrameUrl(Url.Content("about:blank"))
-          .OnClose(Url.Action("RefreshFileList"), "GridFiles")
+                                  .OnClose(Url.Content("~/Service/Manage/RefreshAlertContactsList?id=") + ViewBag.ServiceId, "GridAlertContacts")
+)
+
+    @(F.Window()
+          .ID("WindowFile")
+          .Width(600)
+          .Height(300)
+          .IsModal(true)
+          .Hidden(true)
+          .Target(Target.Top)
+          .EnableResize(true)
+          .EnableMaximize(true)
+          .EnableIFrame(true)
+          .IFrameUrl(Url.Content("about:blank"))
+                  .OnClose(Url.Content("~/Service/Manage/RefreshFileList?SecondaryId=") + ViewBag.SecondaryId, "GridFiles")
 )
 }
 @section script{
     <script>
+        function renderContactsDeleteField(parameters) {
+            return '<a href="javascript:;" class="deletefield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/delete.png")"></a>';
+        }
+
+        function renderContactsEditField(parameters) {
+            return '<a href="javascript:;" class="editfield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/pencil.png")"></a>';
+        }
+
+        function onSyncClick(parameters) {
+            F.doPostBack('@Url.Action("SyncService")',
+                {
+                    'id': @ViewBag.ServiceId
+                });
+        }
+
+        function onContactsCreateClick(parameters) {
+            F.ui.WindowContacts.show('@Url.Content("~/Service/Manage/AddOrEditContacts")'+'ServiceId='+'@ViewBag.ServiceId'+'&PrimaryId='+'@ViewBag.PrimaryId', '新增报警通知人');
+        }
+
+        function onContactsDeleteSelectedClick(parameters) {
+            var gridAlertContacts = F.ui.GridAlertContacts;
+            if (!gridAlertContacts.hasSelection()) {
+                F.alert('请至少选择一项！');
+                return;
+            }
+
+            var selectedRows = gridAlertContacts.getSelectedRows();
+            console.log(selectedRows);
+            F.confirm({
+                message: '你确定要删除选中的&nbsp;<b>' + selectedRows.length + '</b>&nbsp;行数据吗？',
+                target: '_top',
+                ok: function () {
+                    deleteAlertContactsSelectedRows(selectedRows);
+                }
+            });
+        }
+
+        function deleteAlertContactsSelectedRows(parameters) {
+            F.doPostBack('@Url.Action("DeleteAlertContacts")',
+                'GridAlertContacts',
+                {
+                    'selectedRows': selectedRows
+                });
+        }
 
         function renderFileDeleteField(value, params) {
             return '<a href="javascript:;" class="deletefield"><img class="f-grid-cell-icon" src="@Url.Content("~/res/icon/delete.png")"></a>';
@@ -222,7 +328,7 @@
         }
 
         function onUploadClick(parameters) {
-            F.ui.Window1.show('@Url.Content("~/Service/Manage/UploadFile?sec=")'+'@ViewBag.SecondaryId', '上传文件');
+            F.ui.WindowFile.show('@Url.Content("~/Service/Manage/UploadFile?sec=")' + '@ViewBag.SecondaryId', '上传文件');
         }
 
         function onFileDeleteSelectedClick(event) {
@@ -253,7 +359,35 @@
         }
 
 
-        F.ready(function() {
+        F.ready(function () {
+            var gridAlertContacts = F.ui.GridAlertContacts;
+
+            gridAlertContacts.el.on('click',
+                'a.deletefield',
+                function (event) {
+                    var rowEl = $(this).closest('.f-grid-row');
+                    var rowData = gridAlertContacts.getRowData(rowEl);
+                    console.log(rowData);
+                    F.confirm({
+                        message: '你确定要删除选中的行数据吗？',
+                        target: '_top',
+                        ok: function () {
+                            deleteAlertContactsSelectedRows([rowData.id]);
+                        }
+                    });
+                });
+
+            gridAlertContacts.el.on('click',
+                'a.editfield',
+                function (event) {
+                    var rowEl = $(this).closest('.f-grid-row');
+                    var rowData = gridAlertContacts.getRowData(rowEl);
+
+                    F.ui.WindowContacts.show('@Url.Content("~/Service/Manage/AddOrEditContacts/")?id=' + rowData.id+'&ServiceId='+'@ViewBag.ServiceId'+'&PrimaryId='+'@ViewBag.PrimaryId', '编辑报警通知人');
+                });
+
+
+
             var gridFile = F.ui.GridFiles;
             gridFile.el.on('click',
                 'a.deletefield',

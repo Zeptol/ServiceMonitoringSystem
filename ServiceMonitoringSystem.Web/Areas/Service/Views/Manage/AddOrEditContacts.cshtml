@@ -1,0 +1,51 @@
+﻿@{
+    var F = Html.F();
+}
+
+@model ServiceAlertContacts
+
+@section body {
+    @(F.HiddenField().ID("ServiceId").Text(ViewBag.ServiceId),
+    F.HiddenField().ID("PrimaryId").Text(ViewBag.PrimaryId)
+          )
+
+    @(F.Panel()
+          .ID("Panel1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .BodyPadding(10)
+          .AutoScroll(true)
+          .IsViewPort(true)
+          .Toolbars(
+              F.Toolbar()
+                  .Items(
+                      F.Button()
+                          .Icon(Icon.SystemClose)
+                          .Text("关闭")
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.ToolbarSeparator(),
+                      F.Button()
+                          .ValidateForms("SimpleForm1")
+                          .Icon(Icon.SystemSaveClose)
+                          .OnClick(Url.Action("AddOrEditContacts"), "SimpleForm1")
+                          .Text("保存后关闭")
+                  )
+          )
+          .Items(
+              F.SimpleForm()
+                  .ID("SimpleForm1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .Items(
+                      Model == null ? new HiddenFieldExtension(new HiddenField()) : F.HiddenFieldFor(m => m._id),
+                      F.TextBoxFor(m => m.UserName),
+                      F.TextBoxFor(m => m.Tel),
+                      F.TextBoxFor(m => m.Email),
+                      F.TextBoxFor(m => m.WeiXin_UID),
+                      F.TextBoxFor(m => m.DingTalk_UID),
+                      F.TextBoxFor(m => m.AlarmType).EmptyText("报警通知方式:255-全部方式;1-短信;2-邮件;4-微信;8-钉钉;其他-组合方式"),
+                      F.TextBoxFor(m => m.Remark)
+                  )
+          ))
+
+}

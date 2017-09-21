@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ServiceMonitoringSystem.Common.Common;
 using ServiceMonitoringSystem.Common.Enums;
+using ServiceMonitoringSystem.Common.Extensions;
 using ServiceMonitoringSystem.Interface;
 using ServiceMonitoringSystem.IRepository;
 using ServiceMonitoringSystem.Model;
@@ -28,10 +29,12 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         private static Expression<Func<ServiceEntity,bool>> _typeFilter;
         private readonly IMongoRepository<GroupName> _group;
         private readonly IMongoRepository<FileEntity> _file;
-        public ManageController(IMongoRepository<ServiceEntity> rep, IMongoRepository<GroupName> group,ITree tree, IMongoRepository<FileEntity> file) : base(rep)
+        private readonly IMongoRepository<ServiceAlertContacts> _alertContacts;
+        public ManageController(IMongoRepository<ServiceEntity> rep, IMongoRepository<GroupName> group,ITree tree, IMongoRepository<FileEntity> file, IMongoRepository<ServiceAlertContacts> alertContacts) : base(rep)
         {
             _tree = tree;
             _file = file;
+            _alertContacts = alertContacts;
             _group = group;
             Rep = rep;
             Updated += ManageController_Updated;
@@ -172,8 +175,14 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             int count;
             ViewBag.FileList = _file.QueryByPage(0, PageSize, out count,
                 new FilterDefinitionBuilder<FileEntity>().Where(t => t.SecondaryId == model.SecondaryId));
-            ViewBag.RecordCount = count;
+            int countContacts;
+            ViewBag.AlertContactsList = _alertContacts.QueryByPage(0, PageSize, out countContacts,
+                new FilterDefinitionBuilder<ServiceAlertContacts>().Where(t => t.ServiceId == model._id));
+            ViewBag.RecordCountContacts = countContacts;
+            ViewBag.RecordCountFiles = count;
             ViewBag.PageSize = PageSize;
+            ViewBag.ServiceId = model._id;
+            ViewBag.PrimaryId = model.PrimaryId;
             ViewBag.SecondaryId = model.SecondaryId;
             if (!string.IsNullOrWhiteSpace(model.RegContent))
                 InitAddr(model);
@@ -401,10 +410,123 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             var fields = JArray.Parse(fieldsStr);
             var pageIndex = Convert.ToInt32(values["GridFiles_pageIndex"] ?? "0");
             int count;
-            var list = _file.QueryByPage(pageIndex, PageSize, out count);
+            var list = _file.QueryByPage(pageIndex, PageSize, out count, new FilterDefinitionBuilder<FileEntity>().Where(t => t.SecondaryId == int.Parse(Request["SecondaryId"])));
             var grid = UIHelper.Grid("GridFiles");
             grid.RecordCount(count);
             grid.DataSource(list, fields);
+            return UIHelper.Result();
+        }
+        public ActionResult RefreshAlertContactsList(FormCollection values)
+        {
+            var fieldsStr = values["GridAlertContacts_fields"];
+            var fields = JArray.Parse(fieldsStr);
+            var pageIndex = Convert.ToInt32(values["GridAlertContacts_pageIndex"] ?? "0");
+            int count;
+            var list = _alertContacts.QueryByPage(pageIndex, PageSize, out count, new FilterDefinitionBuilder<ServiceAlertContacts>().Where(t => t.ServiceId == int.Parse(Request["id"])));
+            var grid = UIHelper.Grid("GridAlertContacts");
+            grid.RecordCount(count);
+            grid.DataSource(list, fields);
+            return UIHelper.Result();
+        }
+
+        public ActionResult DeleteAlertContacts(JArray selectedRows, FormCollection values)
+        {
+            var ids = selectedRows.Select(x => x.ToString()).ToList();
+            _alertContacts.Delete(t => ids.Contains(t._id));
+            RefreshAlertContactsList(values);
+            return UIHelper.Result();
+        }
+        public ActionResult AddOrEditContacts(string id)
+        {
+            ViewBag.ServiceId = Request["ServiceId"];
+            ViewBag.PrimaryId = Request["PrimaryId"];
+            if (string.IsNullOrEmpty(id)) return View();
+            var model = _alertContacts.Get(t => t._id == id);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddOrEditContacts(ServiceAlertContacts model)
+        {
+            if (!ModelState.IsValid) return UIHelper.Result();
+            try
+            {
+                if (string.IsNullOrEmpty(model._id))
+                {
+                    var serviceId = Request["ServiceId"];
+                    var primaryId = Request["PrimaryId"];
+                    model.ServiceId = int.Parse(serviceId);
+                    model.PrimaryId = int.Parse(primaryId);
+                        _alertContacts.Add(model);
+                        // 关闭本窗体（触发窗体的关闭事件）
+                        PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
+                }
+                else
+                {
+                    _alertContacts.Update(t => t._id == model._id, Builders<ServiceAlertContacts>.Update.Set(t=>t.UserName,model.UserName).Set(t => t.Tel, model.Tel)
+                        .Set(t => t.Email, model.Email)
+                        .Set(t => t.WeiXin_UID, model.WeiXin_UID)
+                        .Set(t => t.DingTalk_UID, model.DingTalk_UID)
+                        .Set(t => t.AlarmType, model.AlarmType)
+                        .Set(t => t.Remark, model.Remark));
+                    // 关闭本窗体（触发窗体的关闭事件）
+                    PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
+                }
+            }
+            catch (Exception ex)
+            {
+                Alert.Show(ex.Message, MessageBoxIcon.Warning);
+            }
+            return UIHelper.Result();
+        }
+
+        public ActionResult SyncService(string id)
+        {
+            int idInt;
+            if (string.IsNullOrWhiteSpace(id) || !int.TryParse(id, out idInt))
+            {
+                ShowNotify("无效同步服务ID");
+                return UIHelper.Result();
+            }
+            try
+            {
+                var list = _alertContacts.Find(t => t.ServiceId == idInt).ToList();
+                if (list.Count > 0)
+                {
+                    var model = Rep.Get(t => t._id == idInt);
+                    var sList = Rep.Find(t => t.PrimaryId == model.PrimaryId && t._id != idInt).ToList();
+
+                    var rList = new List<ServiceAlertContacts>();
+
+                    sList.ForEach(k =>
+                    {
+                        list.ForEach(l =>
+                        {
+                            var m = (ServiceAlertContacts) l.Clone();
+                            m._id = Guid.NewGuid().ToString();
+                            m.ServiceId = Convert.ToInt32(k._id);
+                            m.PrimaryId = k.PrimaryId;
+                            rList.Add(m);
+                        });
+                    });
+                    _alertContacts.Delete(t => t.PrimaryId == model.PrimaryId && t.ServiceId != idInt);
+                    _alertContacts.BulkInsert(rList);
+                    ShowNotify("同步成功");
+                }
+                else
+                {
+                    ShowNotify("无同步数据");
+                }
+            }
+            catch (Exception e)
+            {
+                Alert.Show(e.Message, MessageBoxIcon.Warning);
+                throw;
+            }
             return UIHelper.Result();
         }
     }
