@@ -305,6 +305,26 @@
             var grid1 = F.ui.Grid1;
 
             grid1.el.on('click',
+                'a.approvefield',
+                function (event) {
+                    var rowEl = $(this).closest('.f-grid-row');
+                    var rowData = grid1.getRowData(rowEl);
+                    console.log(rowData);
+                    F.confirm({
+                        message: '确定审核通过并审批？',
+                        target: '_top',
+                        ok: function () {
+                            F.doPostBack('@Url.Action("RegService")', 'Form1,Grid1',
+                {
+                    'id': rowData.id
+                });
+                        }
+                    });
+                });
+
+
+
+            grid1.el.on('click',
                 'a.deletefield',
                 function (event) {
                     var rowEl = $(this).closest('.f-grid-row');

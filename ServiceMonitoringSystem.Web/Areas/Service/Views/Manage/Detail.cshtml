@@ -290,7 +290,7 @@
         }
 
         function onContactsCreateClick(parameters) {
-            F.ui.WindowContacts.show('@Url.Content("~/Service/Manage/AddOrEditContacts")'+'ServiceId='+'@ViewBag.ServiceId'+'&PrimaryId='+'@ViewBag.PrimaryId', '新增报警通知人');
+            F.ui.WindowContacts.show('@Url.Content("~/Service/Manage/AddOrEditContacts")'+'?ServiceId='+'@ViewBag.ServiceId'+'&PrimaryId='+'@ViewBag.PrimaryId', '新增报警通知人');
         }
 
         function onContactsDeleteSelectedClick(parameters) {

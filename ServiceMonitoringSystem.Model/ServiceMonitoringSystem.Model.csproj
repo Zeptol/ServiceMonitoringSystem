@@ -56,11 +56,13 @@
     <Compile Include="BasicType.cs" />
     <Compile Include="FileEntity.cs" />
     <Compile Include="GroupName.cs" />
+    <Compile Include="PhysicalDevice.cs" />
     <Compile Include="ServiceAlertContacts.cs" />
     <Compile Include="ServiceConf.cs" />
     <Compile Include="ServiceEntity.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VirtualDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

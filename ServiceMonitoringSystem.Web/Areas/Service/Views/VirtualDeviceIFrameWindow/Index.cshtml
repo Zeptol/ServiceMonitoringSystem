@@ -1,0 +1,125 @@
+﻿@{
+    var F = Html.F();
+}
+@model IEnumerable<PhysicalDevice>
+
+@section body {
+
+    @(F.Grid()
+          .ID("Grid1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .Title("物理设备")
+          .EnableCollapse(true)
+          .DataIDField("Rid")
+                  .DataTextField("Rid")
+          .EnableCheckBoxSelect(true)
+          .EnableMultiSelect(false)
+          .IsViewPort(true).AllowPaging(true)
+          .PageSize(ViewBag.PageSize)
+          .IsDatabasePaging(true)
+          .OnPageIndexChanged(Url.Action("DoSearch"), "Grid1")
+          .Columns(
+              F.RowNumberField(),
+              F.RenderField()
+                  .HeaderText("机器名称")
+                  .DataField("MachineName"),
+              F.RenderField()
+                  .HeaderText("型号")
+                  .DataField("ModelNum"),
+              F.RenderField()
+                  .HeaderText("设备类型")
+                  .DataField("DeviceType"),
+              F.RenderField()
+                  .HeaderText("业主方")
+                  .DataField("Owner"),
+              F.RenderField()
+                  .HeaderText("公网IP")
+                  .DataField("PublicIP"),
+              F.RenderField()
+                  .HeaderText("内网IP")
+                  .DataField("IntranetIP"),
+              F.RenderField()
+                  .HeaderText("CPU")
+                  .DataField("Cpu").Width(60),
+              F.RenderField()
+                  .HeaderText("内存").Width(60)
+                  .DataField("Memory"),
+              F.RenderField()
+                  .HeaderText("存储").Width(60)
+                  .DataField("Storage"),
+              F.RenderField()
+                  .HeaderText("所在位置").Width(60)
+                  .DataField("Locale"),
+              F.RenderField()
+                  .HeaderText("上架日期")
+                  .DataField("Date")
+                  .FieldType(FieldType.Date)
+                  .Renderer(Renderer.Date)
+                  .RendererArgument("yyyy-MM-dd"),
+              F.RenderField()
+                  .HeaderText("备注")
+                  .DataField("Remark")
+                  .ExpandUnusedSpace(true),
+                            F.RenderField().DataField("Rid").Hidden(true)
+          )
+          .Toolbars(
+              F.Toolbar()
+                  .Position(ToolbarPosition.Top)
+                  .Items(
+                      F.Button()
+                          .ID("btnClose")
+                          .Text("关闭")
+                          .Icon(Icon.SystemClose)
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.Button()
+                          .ID("btnSaveClose")
+                          .Text("选择后关闭")
+                          .Icon(Icon.SystemSaveClose)
+                          .Listener("click", "onGrid1RowSelect")
+                  )
+          )
+          .Listener("rowdblclick", "onGrid1RowSelect")
+          .RecordCount(ViewBag.RecordCount)
+          .DataSource(Model)
+
+          )
+
+
+}
+
+@section script {
+    <script>
+
+        function onGrid1RowSelect(event) {
+            // 返回当前活动Window对象（浏览器窗口对象通过F.getActiveWindow().window获取）
+            var activeWindow = F.getActiveWindow();
+
+            // 选中行数据
+            var rowData = F.ui.Grid1.getSelectedRow(true);
+            if (!rowData) {
+                F.alert('请选择一条数据！');
+                return;
+            }
+            var rowValue = rowData.values;
+
+            var queryRowId = F.queryString('rowid');
+            var selectedValues = {
+                'Name': rowValue['Name'],
+                'Gender': rowValue['Gender'],
+                'EntranceYear': rowValue['EntranceYear'],
+                'EntranceDate': rowValue['EntranceDate'],
+                'AtSchool': rowValue['AtSchool'],
+                'Major': rowValue['Major']
+            };
+
+            // 隐藏弹出窗体
+            activeWindow.hide();
+
+            // 调用父页面的 updateHost 函数
+            activeWindow.window.updateHost(rowValue["Rid"]);
+        }
+
+
+    </script>
+}

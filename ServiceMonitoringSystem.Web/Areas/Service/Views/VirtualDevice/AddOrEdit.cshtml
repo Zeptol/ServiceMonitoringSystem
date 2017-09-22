@@ -1,0 +1,81 @@
+﻿@{
+    var F = Html.F();
+}
+
+@model VirtualDevice
+
+@section body {
+
+    @(F.Panel()
+          .ID("Panel1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .BodyPadding(10)
+          .AutoScroll(true)
+          .IsViewPort(true)
+          .Toolbars(
+              F.Toolbar()
+                  .Items(
+                      F.Button()
+                          .Icon(Icon.SystemClose)
+                          .Text("关闭")
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.ToolbarSeparator(),
+                      F.Button()
+                          .ValidateForms("SimpleForm1")
+                          .Icon(Icon.SystemSaveClose)
+                          .OnClick(Url.Action("AddOrEdit"), "SimpleForm1")
+                          .Text("保存后关闭")
+                  )
+          )
+          .Items(
+              F.SimpleForm()
+                  .ID("SimpleForm1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .Items(
+                      Model == null ? new HiddenFieldExtension(new HiddenField()) : F.HiddenFieldFor(m => m.Rid),
+                      F.TextBoxFor(m => m.MachineName),
+                      F.TextBoxFor(m => m.ModelNum),
+                      F.TriggerBoxFor(m => m.HostDevice).TriggerIcon(TriggerIcon.Search)
+                          .Listener("triggerclick", "onHostDeviceTriggerClick"),
+                      F.TextBoxFor(m => m.PublicIP),
+                      F.TextBoxFor(m => m.IntranetIP),
+                      F.TextBoxFor(m => m.DomainIP),
+                      F.TextBoxFor(m => m.Cpu),
+                      F.TextBoxFor(m => m.Memory),
+                      F.TextBoxFor(m => m.Storage),
+                      F.DatePickerFor(m => m.StartDate),
+                      F.TextAreaFor(m => m.Remark)
+                  )
+          ))
+
+    @(F.Window()
+          .ID("Window1")
+          .EnableIFrame(true)
+          .EnableMaximize(true)
+          .EnableResize(true)
+          .Target(Target.Top)
+          .Height(350)
+          .Width(700)
+          .Title("选择宿主机")
+          .Hidden(true)
+          )
+
+
+}
+
+@section script{
+    <script>
+
+        function updateHost(value) {
+            //$('#HostDevice-inputEl').val(value);
+            F.ui.HostDevice.setValue(value);
+        }
+
+        function onHostDeviceTriggerClick(parameters) {
+            var iframeWindowUrl = '@Url.Content("~/Service/VirtualDeviceIFrameWindow")';
+            F.ui.Window1.show(iframeWindowUrl);
+        }
+    </script>
+}

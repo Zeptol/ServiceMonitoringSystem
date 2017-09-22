@@ -5,9 +5,8 @@
 @model ServiceAlertContacts
 
 @section body {
-    @(F.HiddenField().ID("ServiceId").Text(ViewBag.ServiceId),
-    F.HiddenField().ID("PrimaryId").Text(ViewBag.PrimaryId)
-          )
+    @(F.HiddenField().ID("ServiceId").Text(ViewBag.ServiceId))
+    @(F.HiddenField().ID("PrimaryId").Text(ViewBag.PrimaryId))
 
     @(F.Panel()
           .ID("Panel1")
