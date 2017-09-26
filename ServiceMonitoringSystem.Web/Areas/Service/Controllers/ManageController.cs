@@ -24,14 +24,14 @@ using CommonHelper = ServiceMonitoringSystem.Common.Common.CommonHelper;
 
 namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
 {
-    public class ManageController : BaseController<ServiceEntity>
+    public class ManageController : BaseController<ServiceList>
     {
         private readonly ITree _tree;
-        private static Expression<Func<ServiceEntity,bool>> _typeFilter;
+        private static Expression<Func<ServiceList,bool>> _typeFilter;
         private readonly IMongoRepository<GroupName> _group;
         private readonly IMongoRepository<FileEntity> _file;
         private readonly IMongoRepository<ServiceAlertContacts> _alertContacts;
-        public ManageController(IMongoRepository<ServiceEntity> rep, IMongoRepository<GroupName> group,ITree tree, IMongoRepository<FileEntity> file, IMongoRepository<ServiceAlertContacts> alertContacts) : base(rep)
+        public ManageController(IMongoRepository<ServiceList> rep, IMongoRepository<GroupName> group,ITree tree, IMongoRepository<FileEntity> file, IMongoRepository<ServiceAlertContacts> alertContacts) : base(rep)
         {
             _tree = tree;
             _file = file;
@@ -47,26 +47,26 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             var key = values["tbxKey"];
             var appr = values["rblApprove"];
             var nodeId = values["nodeId"];
-            var filter = new List<FilterDefinition<ServiceEntity>>();
+            var filter = new List<FilterDefinition<ServiceList>>();
             if (_typeFilter != null) filter.Add(_typeFilter);
             if (!string.IsNullOrEmpty(nodeId))
                 if (nodeId != "all")
                     if (nodeId.StartsWith("1"))
-                        filter.Add(Builders<ServiceEntity>.Filter.Eq(t => t.PrimaryId, int.Parse(nodeId.Substring(2))));
+                        filter.Add(Builders<ServiceList>.Filter.Eq(t => t.PrimaryId, int.Parse(nodeId.Substring(2))));
                     else if (nodeId.StartsWith("2"))
-                        filter.Add(Builders<ServiceEntity>.Filter.Eq(t => t.SecondaryId, int.Parse(nodeId.Substring(2))));
+                        filter.Add(Builders<ServiceList>.Filter.Eq(t => t.SecondaryId, int.Parse(nodeId.Substring(2))));
 
             if (!string.IsNullOrEmpty(host) && host != "全部")
-                filter.Add(Builders<ServiceEntity>.Filter.Eq(t => t.Host, host));
+                filter.Add(Builders<ServiceList>.Filter.Eq(t => t.Host, host));
             if (!string.IsNullOrEmpty(key))
                 filter.Add(
-                    Builders<ServiceEntity>.Filter.Or(
-                        Builders<ServiceEntity>.Filter.Regex(t => t.ServiceName,
+                    Builders<ServiceList>.Filter.Or(
+                        Builders<ServiceList>.Filter.Regex(t => t.ServiceName,
                             new BsonRegularExpression(new Regex(key, RegexOptions.IgnoreCase))),
-                        Builders<ServiceEntity>.Filter.Regex(t => t.SecondaryName,
+                        Builders<ServiceList>.Filter.Regex(t => t.SecondaryName,
                             new BsonRegularExpression(new Regex(key, RegexOptions.IgnoreCase)))));
             if (!string.IsNullOrEmpty(appr))
-                filter.Add(Builders<ServiceEntity>.Filter.Eq(t => t.IsApproved, appr == "1"));
+                filter.Add(Builders<ServiceList>.Filter.Eq(t => t.IsApproved, appr == "1"));
 
             var fieldStr = values["Grid1_fields"];
             var arr = string.IsNullOrEmpty(fieldStr)
@@ -83,7 +83,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             var type = Request["type"];
             var filter = !string.IsNullOrEmpty(type)
                 ? t => t.ServiceType == (ServiceTypeEnum) Enum.Parse(typeof(ServiceTypeEnum), type)
-                : (Expression<Func<ServiceEntity, bool>>) null;
+                : (Expression<Func<ServiceList, bool>>) null;
             _typeFilter = filter;
             var hostList = new List<ListItem>
             {
@@ -118,7 +118,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult AddOrEdit(ServiceEntity model)
+        public ActionResult AddOrEdit(ServiceList model)
         {
             if (!ModelState.IsValid) return UIHelper.Result();
             try
@@ -143,7 +143,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                 else
                 {
                     SetRegContent(model);
-                    Rep.Update(t => t._id == Convert.ToInt32(model._id), Builders<ServiceEntity>.Update.Set(t => t.ServiceName, model.ServiceName)
+                    Rep.Update(t => t._id == Convert.ToInt32(model._id), Builders<ServiceList>.Update.Set(t => t.ServiceName, model.ServiceName)
                         .Set(t => t.SecondaryName, model.SecondaryName)
                         .Set(t => t.Host, model.Host)
                         .Set(t => t.Version, model.Version)
@@ -189,13 +189,13 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                 InitAddr(model);
             return View(model);
         }
-        private void InitAddr(ServiceEntity model)
+        private void InitAddr(ServiceList model)
         {
             var cfg = JsonConvert.DeserializeObject<ServiceConf>(model.RegContent);
             ViewBag.InList = cfg.InAddr;
             ViewBag.OutList = cfg.OutAddr;
         }
-        private void SetRegContent(ServiceEntity model)
+        private void SetRegContent(ServiceList model)
         {
             var inList = new List<string>();
             var outList = new List<string>();
@@ -229,7 +229,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             };
             model.RegContent = JsonConvert.SerializeObject(cfg);
         }
-        private bool CheckRepeat(ServiceEntity model)
+        private bool CheckRepeat(ServiceList model)
         {
             var modelDb = Rep.Get(t => t.ServiceName == model.ServiceName && t.SecondaryName == model.SecondaryName);
             if (modelDb == null) return true;
@@ -240,7 +240,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         {
             int count;
             var list =
-                ((List<ServiceEntity>) Session["list"] ?? Rep.QueryByPage(0, int.MaxValue, out count)).Where(
+                ((List<ServiceList>) Session["list"] ?? Rep.QueryByPage(0, int.MaxValue, out count)).Where(
                     _typeFilter.Compile()).ToList();
             const string thHtml = "<th>{0}</th>";
             const string tdHtml = "<td>{0}</td>";
@@ -544,7 +544,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                 }
                 var serverName = string.Format("{0}/{1}", model.ServiceName, model.SecondaryName);
                 ServerDiscoveryHelper.ServiceRegister(serverName, model.Version, model.RegContent);
-                Rep.Update(t => t._id == id, Builders<ServiceEntity>.Update.Set(t => t.IsApproved, true));
+                Rep.Update(t => t._id == id, Builders<ServiceList>.Update.Set(t => t.IsApproved, true));
                 ShowNotify("注册成功");
                 OnUpdated(values);
             }

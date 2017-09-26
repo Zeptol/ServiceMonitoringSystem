@@ -12,14 +12,14 @@ namespace ServiceMonitoringSystem.Service
 {
     public class TreeService:ITree
     {
-        private readonly IMongoRepository<ServiceEntity> _rep;
+        private readonly IMongoRepository<ServiceList> _rep;
 
-        public TreeService(IMongoRepository<ServiceEntity> rep)
+        public TreeService(IMongoRepository<ServiceList> rep)
         {
             _rep = rep;
         }
 
-        public IList<TreeNode> GetTreeNodes(Expression<Func<ServiceEntity, bool>> filter)
+        public IList<TreeNode> GetTreeNodes(Expression<Func<ServiceList, bool>> filter)
         {
             var list = _rep.Find(filter).ToList();
             var all = new TreeNode {Text = "全部", NodeID = "all", Expanded = true};

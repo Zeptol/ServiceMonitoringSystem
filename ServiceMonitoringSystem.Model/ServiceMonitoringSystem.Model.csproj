@@ -59,7 +59,7 @@
     <Compile Include="PhysicalDevice.cs" />
     <Compile Include="ServiceAlertContacts.cs" />
     <Compile Include="ServiceConf.cs" />
-    <Compile Include="ServiceEntity.cs" />
+    <Compile Include="ServiceList.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VirtualDevice.cs" />

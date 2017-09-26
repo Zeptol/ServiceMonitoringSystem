@@ -6,7 +6,7 @@ using ServiceMonitoringSystem.Common.Enums;
 
 namespace ServiceMonitoringSystem.Model
 {
-    public class ServiceEntity
+    public class ServiceList
     {
         public int _id { get; set; }
 

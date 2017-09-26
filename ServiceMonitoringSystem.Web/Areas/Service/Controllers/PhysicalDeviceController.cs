@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 using FineUIMvc;
 using MongoDB.Bson;
@@ -25,7 +24,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         {
             _common = common;
             Rep = rep;
-            Updated+=PhysicalDeviceController_Updated;
+            Updated += PhysicalDeviceController_Updated;
         }
 
         private void PhysicalDeviceController_Updated(NameValueCollection values)
@@ -62,8 +61,8 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             };
             typeList.AddRange(_common.GetTypeSelectList("设备类型"));
             ownerList.AddRange(_common.GetTypeSelectList("业主方"));
-            ViewBag.ddlDeviceType=typeList.ToArray();
-            ViewBag.ddlOwner =ownerList.ToArray();
+            ViewBag.ddlDeviceType = typeList.ToArray();
+            ViewBag.ddlOwner = ownerList.ToArray();
             return base.Index();
         }
 
@@ -73,11 +72,12 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             OnUpdated(values);
             return UIHelper.Result();
         }
+
         public ActionResult AddOrEdit(int? id)
         {
-            ViewBag.DeviceTypeList =_common.GetTypeSelectList("设备类型");
+            ViewBag.DeviceTypeList = _common.GetTypeSelectList("设备类型");
             ViewBag.OwnerList = _common.GetTypeSelectList("业主方");
-            if (id==null) return View();
+            if (id == null) return View();
             var model = Rep.Get(t => t.Rid == id);
             if (model == null)
             {
@@ -85,13 +85,14 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             }
             return View(model);
         }
+
         [HttpPost]
         public ActionResult AddOrEdit(PhysicalDevice model)
         {
             if (!ModelState.IsValid) return UIHelper.Result();
             try
             {
-                if (model.Rid==0)
+                if (model.Rid == 0)
                 {
                     if (!CheckRepeat(model))
                     {
@@ -99,7 +100,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     }
                     else
                     {
-                        model.Rid = (int)(Rep.Max(t => t.Rid) ?? 0) + 1;
+                        model.Rid = (int) (Rep.Max(t => t.Rid) ?? 0) + 1;
                         Rep.Add(model);
                         // 关闭本窗体（触发窗体的关闭事件）
                         PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
@@ -135,6 +136,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             }
             return UIHelper.Result();
         }
+
         private bool CheckRepeat(PhysicalDevice model)
         {
             var modelDb =

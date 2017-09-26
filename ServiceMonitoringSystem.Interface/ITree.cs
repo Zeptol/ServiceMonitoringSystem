@@ -8,6 +8,6 @@ namespace ServiceMonitoringSystem.Interface
 {
     public interface ITree
     {
-        IList<TreeNode> GetTreeNodes(Expression<Func<ServiceEntity, bool>> filter=null);
+        IList<TreeNode> GetTreeNodes(Expression<Func<ServiceList, bool>> filter=null);
     }
 }
