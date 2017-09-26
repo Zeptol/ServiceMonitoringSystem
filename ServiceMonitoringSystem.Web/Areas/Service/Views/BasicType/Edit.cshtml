@@ -35,7 +35,7 @@
                   .ShowBorder(false)
                   .ShowHeader(false)
                   .Items(
-                      F.HiddenFieldFor(m => m._id),
+                      F.HiddenFieldFor(m => m.Rid),
                       F.DropDownListFor(m => m.TypeId).Items(ViewBag.TypeList),
                       F.TextBoxFor(m => m.Num),
                       F.TextBoxFor(m => m.Name)

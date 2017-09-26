@@ -71,7 +71,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var model = Rep.Get(t => t._id == id);
+            var model = Rep.Get(t => t.Rid == id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -81,7 +81,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         }
         public ActionResult Delete(JArray selectedRows, FormCollection values)
         {
-            Rep.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t._id));
+            Rep.Delete(t => selectedRows.Select(Convert.ToInt32).Contains(t.Rid));
             OnUpdated(values);
             return UIHelper.Result();
         }
@@ -100,8 +100,8 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                         }
                         else
                         {
-                            var max = (int)(Rep.Max(t => t._id) ?? 0);
-                            model._id = max + 1;
+                            var max = (int)(Rep.Max(t => t.Rid) ?? 0);
+                            model.Rid = max + 1;
                             Rep.Add(model);
                             // 关闭本窗体（触发窗体的关闭事件）
                             PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
@@ -132,7 +132,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     }
                     else
                     {
-                        Rep.Update(t => t._id == model._id,
+                        Rep.Update(t => t.Rid == model.Rid,
                             Builders<BasicType>.Update.Set(t => t.TypeId, model.TypeId)
                                 .Set(t => t.Num, model.Num)
                                 .Set(t => t.Name, model.Name));
@@ -151,7 +151,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         {
             var modelDb = Rep.Get(t => t.Num == model.Num || t.Name == model.Name);
             if (modelDb == null) return true;
-            return model._id == modelDb._id;
+            return model.Rid == modelDb.Rid;
         }
     }
 }

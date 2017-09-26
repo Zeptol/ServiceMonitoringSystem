@@ -25,7 +25,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
                 Builders<User>.Filter.And(
                     Builders<User>.Filter.Regex(t => t.UserPwd,
                         new BsonRegularExpression(new Regex(CommonHelper.GetMd5(tbxPassword), RegexOptions.IgnoreCase))),
-                    Builders<User>.Filter.Eq(t => t.UserName, tbxUserName));
+                    Builders<User>.Filter.Eq(t => t.LoginName, tbxUserName));
             if (Rep.Get(filter) != null)
             {
                 FormsAuthentication.RedirectFromLoginPage(tbxUserName, false);

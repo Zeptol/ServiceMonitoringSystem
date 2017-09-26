@@ -54,11 +54,11 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
         {
             var typeList = new List<ListItem>
             {
-                new ListItem("全部", "", true),
+                new ListItem("全部", "", true)
             };
             var ownerList = new List<ListItem>
             {
-                new ListItem("全部", "", true),
+                new ListItem("全部", "", true)
             };
             typeList.AddRange(_common.GetTypeSelectList("设备类型"));
             ownerList.AddRange(_common.GetTypeSelectList("业主方"));

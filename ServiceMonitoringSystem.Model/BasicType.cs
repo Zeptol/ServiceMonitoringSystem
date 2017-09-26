@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
 
 namespace ServiceMonitoringSystem.Model
 {
     public class BasicType
     {
-        public int _id { get; set; }
+        public ObjectId _id { get; set; }
         public int Rid { get; set; }
         [Required]
         [Display(Name = "类型")]

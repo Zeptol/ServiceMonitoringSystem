@@ -39,5 +39,6 @@ namespace ServiceMonitoringSystem.Model
         [Display(Name = "域IP")]
         [RegularExpression("^((2[0-4]\\d|25[0-5]|[1-9]?\\d|1\\d{2})\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$", ErrorMessage = "无效的IP地址")]
         public string DomainIP { get; set; }
+        public int? DeviceType { get; set; }
     }
 }

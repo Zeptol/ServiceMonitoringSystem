@@ -1926,6 +1926,7 @@
     <Content Include="Areas\Service\Views\VirtualDevice\Index.cshtml" />
     <Content Include="Areas\Service\Views\VirtualDevice\AddOrEdit.cshtml" />
     <Content Include="Areas\Service\Views\VirtualDeviceIFrameWindow\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
