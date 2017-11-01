@@ -71,6 +71,30 @@ namespace ServiceMonitoringSystem.Repository
 
         public void Add(T model)
         {
+            var propId = typeof(T).GetProperty("_id");
+            if (propId != null)
+            {
+                var typeId = propId.PropertyType;
+                if (typeId == typeof(int))
+                {
+                    var param = Expression.Parameter(typeof(T));
+                    var prop = Expression.Property(param, typeof(T), "_id");
+                    var id = Max(Expression.Lambda<Func<T, object>>(Expression.Convert(prop, typeof(object)), param));
+                    propId.SetValue(model, (int) (id ?? 0) + 1);
+                }
+            }
+            var propRid = typeof(T).GetProperty("Rid");
+            if (propRid != null)
+            {
+                var typeId = propRid.PropertyType;
+                if (typeId == typeof(int))
+                {
+                    var param = Expression.Parameter(typeof(T));
+                    var prop = Expression.Property(param, typeof(T), "Rid");
+                    var id = Max(Expression.Lambda<Func<T, object>>(Expression.Convert(prop, typeof(object)), param));
+                    propRid.SetValue(model, (int)(id ?? 0) + 1);
+                }
+            }
             _collection.InsertOne(model);
         }
 

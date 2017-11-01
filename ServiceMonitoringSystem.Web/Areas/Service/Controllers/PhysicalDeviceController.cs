@@ -100,7 +100,6 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     }
                     else
                     {
-                        model.Rid = (int) (Rep.Max(t => t.Rid) ?? 0) + 1;
                         Rep.Add(model);
                         // 关闭本窗体（触发窗体的关闭事件）
                         PageContext.RegisterStartupScript(ActiveWindow.GetHidePostBackReference());
