@@ -9,18 +9,18 @@ using ServiceMonitoringSystem.IRepository;
 
 namespace ServiceMonitoringSystem.Repository
 {
-    public class MongoRepository<T> : IMongoRepository<T> where T : class
+    public class MongoRepositoryBusData<T> : IMongoRepositoryBusData<T> where T : class
     {
-        private readonly IMongoCollection<T> _collection;
+         private readonly IMongoCollection<T> _collection;
 
-        public MongoRepository(string collectionName = null)
+         public MongoRepositoryBusData(string collectionName = null)
         {
             _collection = GetCollection(collectionName);
         }
 
         private static IMongoCollection<T> GetCollection(string collectionName)
         {
-            var mongoUrl = new MongoUrl(ConfigurationManager.AppSettings["mongo"]);
+            var mongoUrl = new MongoUrl(ConfigurationManager.AppSettings["mongoBusData"]);
             var mongoClient = new MongoClient(mongoUrl);
             var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
             return database.GetCollection<T>(collectionName ?? typeof(T).Name);
@@ -80,7 +80,7 @@ namespace ServiceMonitoringSystem.Repository
                     var param = Expression.Parameter(typeof(T));
                     var prop = Expression.Property(param, typeof(T), "_id");
                     var id = Max(Expression.Lambda<Func<T, object>>(Expression.Convert(prop, typeof(object)), param));
-                    propId.SetValue(model, (int) (id ?? 0) + 1);
+                    propId.SetValue(model, (int)(id ?? 0) + 1);
                 }
             }
             var propRid = typeof(T).GetProperty("Rid");

@@ -60,6 +60,9 @@
     <Compile Include="ServiceAlertContacts.cs" />
     <Compile Include="ServiceConf.cs" />
     <Compile Include="ServiceList.cs" />
+    <Compile Include="tblGPS.cs" />
+    <Compile Include="tblVehEquipment.cs" />
+    <Compile Include="tblVehRoute.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VirtualDevice.cs" />

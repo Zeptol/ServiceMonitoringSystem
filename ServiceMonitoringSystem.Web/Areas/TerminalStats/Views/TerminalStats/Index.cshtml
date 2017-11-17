@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "Index";
+    var F = Html.F();
+}
+
+@section body {
+
+    @(F.Panel()
+          .ID("Panel1")
+          .BodyPadding(5)
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .Layout(LayoutType.VBox)
+          .IsViewPort(true)
+          .Toolbars(
+          F.Toolbar().Items(
+            F.Button().Listener("click", "onBtnClick").Icon(Icon.SystemSearch).Text("搜索")
+          )
+          )
+          .Items(
+              F.Grid()
+                  .BoxFlex(1)
+                  .ShowHeader(false)
+                  .ShowBorder(true)
+                  .ID("Grid1")
+                  .DataIDField("_id")
+                  .DataTextField("Name")
+                  .EnableCheckBoxSelect(true)
+                  .AllowPaging(true)
+                  .PageSize(ViewBag.PageSize)
+                  .IsDatabasePaging(true)
+                  .OnPageIndexChanged(Url.Action("DoSearch"), "Form1,Grid1")
+                  .Columns(
+                      F.RowNumberField(),
+                      F.RenderField()
+                          .HeaderText("车号")
+                                  .DataField("_id"),
+                      F.RenderField()
+                          .HeaderText("线路名").Width(150)
+                                          .DataField("LineName"),
+                      F.RenderField()
+                          .HeaderText("厂商")
+                                          .DataField("Manufacturer").RendererFunction("renderFac"),
+                              F.RenderField()
+                                  .HeaderText("软件版本").ExpandUnusedSpace(true)
+                                          .DataField("SoftVersion"),
+                      F.RenderField()
+                          .HeaderText("1道IP")
+                                  .DataField("IPAddress_F"),
+                                   F.RenderField()
+                                  .HeaderText("2道IP").Width(150)
+                                  .DataField("IPAddress_S"),
+                                   F.RenderField()
+                          .HeaderText("终端IP")
+                                  .DataField("IPAddress_T")
+                  )
+                  .RecordCount(ViewBag.RecordCount)
+                  .DataSource(Model)
+
+          )
+    )
+
+
+    @(F.Window()
+          .ID("Window1")
+          .Width(600)
+          .Height(300)
+          .IsModal(true)
+          .Hidden(true)
+          .Target(Target.Top)
+          .EnableResize(true)
+          .EnableMaximize(true)
+          .EnableIFrame(true)
+          .IFrameUrl(Url.Content("about:blank"))
+          .OnClose(Url.Action("DoSearch"), "Form1,Grid1")
+    )
+@(F.Window()
+          .ID("Window1")
+          .Width(600)
+          .Height(380)
+          .IsModal(true)
+          .Hidden(true)
+          .Target(Target.Top)
+          .EnableResize(true)
+          .EnableMaximize(true)
+          .EnableIFrame(true)
+          .IFrameUrl(Url.Content("about:blank"))
+          .OnClose(Url.Action("DoSearch"), "Form1,Grid1")
+)
+}
+
+@section script{
+    <script>
+        function onBtnClick() {
+            F.ui.Window1.show('@Url.Action("Search")', '搜索');
+        }
+        function doSearch(values) {
+            F.doPostBack('@Url.Action("DoSearch")', 'Grid1', values);
+        }
+        function renderFac(val) {
+            switch (val) {
+            case "A":
+                return "中安";
+            case "B":
+                return "奥玛";
+            case "C":
+                return "新媒体";
+            case "D":
+                return "强生";
+            default:
+                return "其他";
+            }
+        }
+    </script>
+}

@@ -67,6 +67,7 @@
     <Compile Include="Common\CommonHelper.cs" />
     <Compile Include="Common\ExcelHelper.cs" />
     <Compile Include="Enums\AlarmTypeEnum.cs" />
+    <Compile Include="Enums\Manufacturer.cs" />
     <Compile Include="Enums\ServiceTypeEnum.cs" />
     <Compile Include="Extensions\CommonExtensions.cs" />
     <Compile Include="Extensions\LambdaExtensions.cs" />

@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Stats";
+}
+@section head{
+    <style>
+        .td {
+            text-align: center;
+            font-size: 9pt;
+            border-left-style: solid;
+            border-right-style: solid;
+            border-bottom-style: solid;
+            border-top-style: solid;
+            border-right-width: 1px;
+            border-left-width: 1px;
+            border-bottom-width: 1px;
+            border-top-width: 1px;
+            padding-left: 2px;
+            word-wrap: break-word;
+            overflow: hidden;
+            padding: 1px;
+            vertical-align: middle;
+        }
+
+        .x-table {
+            border-collapse: collapse;
+        }
+
+        .title {
+            background-color: rgb(235,247,252);
+            color: rgb(42,135,198);
+            border-bottom-color: rgb(149,211,244);
+            font-family: Microsoft YaHei UI;
+            border-bottom-style: solid;
+            border-bottom-width: 3px;
+            border-right: 0;
+            border-left: 0;
+            border-top: 0;
+            padding-left: 2px;
+            font-size: 18pt;
+            overflow: hidden;
+            padding: 0;
+            vertical-align: middle;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        .colName {
+            background-color: rgb(79, 173, 194);
+            color: rgb(255, 255, 255);
+            border-bottom-color: rgb(164, 218, 234);
+            border-left-color: rgb(164, 218, 234);
+            border-top-color: rgb(164, 218, 234);
+            font-family: Microsoft YaHei UI;
+            border-right-color: rgb(164, 218, 234);
+        }
+
+        .td-data {
+            color: rgb(30, 30, 30);
+            border-bottom-color: rgb(164, 218, 234);
+            border-left-color: rgb(164, 218, 234);
+            border-top-color: rgb(164, 218, 234);
+            font-family: Microsoft YaHei UI;
+            border-right-color: rgb(164, 218, 234);
+        }
+
+        .tr {
+            height: 30px;
+        }
+
+        .azure {
+            background-color: rgb(241, 254, 255);
+        }
+    </style>
+}
+@section body{
+    <div style="border-top: 0; left: 0; width: inherit; height: inherit; position: absolute;">
+        <div style="width: 1058px; height: 1122px; border: none;">
+            <div style="background-color: rgb(255, 255, 255); top: 15.0px; left: 18.0px; width: 1025.0px; position: absolute; height: 1099.36062992126px;">
+                <div id="tableDiv" style="top: 0; left: 0; width: 858px; position: absolute; height: 1073px;">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section script{
+    <script>
+        $(document).ready(function() {
+            $.post("@Url.Action("GetHtml")",
+                {},
+                function(result) {
+                    $("#tableDiv").html(result.escape());
+                });
+        });
+        String.prototype.escape = function() {
+            return this.replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&quot;/g, "\"");
+        }
+    </script>
+}

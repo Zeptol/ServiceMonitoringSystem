@@ -149,7 +149,15 @@
                                       F.TreeNode()
                                           .Text("联系人")
                                           .NavigateUrl("~/Service/AppContacts")
-                                  )
+                                  ),
+                                          F.TreeNode().Text("终端统计").Nodes(
+                                          F.TreeNode()
+                                                          .Text("终端明细")
+                                                                  .NavigateUrl("~/TerminalStats/TerminalStats"),
+                                              F.TreeNode()
+                                                  .Text("分类统计")
+                                                                  .NavigateUrl("~/TerminalStats/TerminalStats/Stats")
+                                                  )
                           )
                   ),
               F.Region()

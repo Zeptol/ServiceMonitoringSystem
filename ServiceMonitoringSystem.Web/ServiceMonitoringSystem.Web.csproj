@@ -156,6 +156,8 @@
     <Compile Include="Areas\Service\Controllers\VirtualDeviceController.cs" />
     <Compile Include="Areas\Service\Controllers\VirtualDeviceIFrameWindowController.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
+    <Compile Include="Areas\TerminalStats\Controllers\TerminalStatsController.cs" />
+    <Compile Include="Areas\TerminalStats\TerminalStatsAreaRegistration.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -1926,6 +1928,12 @@
     <Content Include="Areas\Service\Views\VirtualDevice\Index.cshtml" />
     <Content Include="Areas\Service\Views\VirtualDevice\AddOrEdit.cshtml" />
     <Content Include="Areas\Service\Views\VirtualDeviceIFrameWindow\Index.cshtml" />
+    <Content Include="Areas\TerminalStats\Views\web.config" />
+    <Content Include="Areas\TerminalStats\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\TerminalStats\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\TerminalStats\Views\TerminalStats\Index.cshtml" />
+    <Content Include="Areas\TerminalStats\Views\TerminalStats\Search.cshtml" />
+    <Content Include="Areas\TerminalStats\Views\TerminalStats\Stats.cshtml" />
     <None Include="Properties\PublishProfiles\a.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1952,6 +1960,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Service\Models\" />
+    <Folder Include="Areas\TerminalStats\Models\" />
     <Folder Include="res\js\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,71 @@
+﻿@{
+    var F = Html.F();
+}
+
+@section body {
+
+    @(F.Panel()
+          .ID("Panel1")
+          .ShowBorder(false)
+          .ShowHeader(false)
+          .BodyPadding(10)
+          .AutoScroll(true)
+          .IsViewPort(true)
+          .Toolbars(
+              F.Toolbar()
+                  .Items(
+                      F.Button()
+                          .Icon(Icon.SystemClose)
+                          .Text("关闭")
+                          .Listener("click", "F.activeWindow.hide();"),
+                      F.ToolbarSeparator(),
+                      F.Button()
+                          .ValidateForms("SimpleForm1")
+                          .Icon(Icon.SystemSearch)
+                          .Listener("click", "onSearchClick")
+                          .Text("搜索"),
+                      F.Button()
+                          .Text("重置")
+                          .Listener("click", "F.ui.SimpleForm1.reset();")
+                  )
+          )
+          .Items(
+              F.SimpleForm()
+                  .ID("SimpleForm1")
+                  .ShowBorder(false)
+                  .ShowHeader(false)
+                  .Items(
+                      F.TextBox().ID("tbVehNum").Label("车号").EmptyText("车号"),
+                      F.TextBox().ID("tbLine").Label("线路名").EmptyText("线路名"),
+                      F.DropDownList().Items(ViewBag.Facs).ID("ddlFac").Label("厂商").EmptyText("厂商"),
+                      F.TextBox().ID("tbIpf").Label("1道IP").EmptyText("1道IP"),
+                      F.TextBox().ID("tbIps").Label("2道IP").EmptyText("2道IP"),
+                      F.TextBox().ID("tbIpt").Label("终端IP").EmptyText("终端IP")
+                  )
+          ))
+}
+
+@section script{
+    <script>
+        function onSearchClick(parameters) {
+            // 返回当前活动Window对象（浏览器窗口对象通过F.getActiveWindow().window获取）
+            var activeWindow = F.getActiveWindow();
+
+            var queryRowId = F.queryString('rowid');
+            var values = {
+                'tbVehNum': F.ui.tbVehNum.getValue(),
+                'tbLine': F.ui.tbLine.getValue(),
+                'ddlFac': F.ui.ddlFac.getValue(),
+                'tbIpf': F.ui.tbIpf.getValue(),
+                'tbIps': F.ui.tbIps.getValue(),
+                'tbIpt': F.ui.tbIpt.getValue()
+            };
+            // 隐藏弹出窗体
+            activeWindow.hide();
+
+            // 调用父页面函数
+            activeWindow.window.doSearch(values);
+        }
+
+    </script>
+}
