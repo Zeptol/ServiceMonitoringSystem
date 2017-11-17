@@ -88,7 +88,7 @@ namespace ServiceMonitoringSystem.Web.Areas.TerminalStats.Controllers
         {
             var htmlStr =
                 new StringBuilder(
-                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 150px;\"><col style=\"width: 60px;\"><col style=\"width: 150px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">对应终端数量</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">对应车辆数</td></tr>");
+                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 100px;\"><col style=\"width: 60px;\"><col style=\"width: 100px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">对应终端数量</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">对应车辆数</td></tr>");
             var fs = list.Select(t => t.IPAddress_F).Distinct().ToList();
             var no = 0;
             foreach (var f in fs)
@@ -129,7 +129,7 @@ namespace ServiceMonitoringSystem.Web.Areas.TerminalStats.Controllers
         {
             var htmlStr =
                 new StringBuilder(
-                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 150px;\"><col style=\"width: 150px;\"><col style=\"width: 60px;\"><col style=\"width: 60px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">对应厂商数量</td><td class=\"td colName\" style=\"text-align: center;\">厂商</td><td class=\"td colName\" style=\"text-align: center;\">对应车辆数</td></tr>");
+                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 100px;\"><col style=\"width: 100px;\"><col style=\"width: 60px;\"><col style=\"width: 60px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">对应厂商数量</td><td class=\"td colName\" style=\"text-align: center;\">厂商</td><td class=\"td colName\" style=\"text-align: center;\">对应车辆数</td></tr>");
             var tfs = list.GroupBy(t => new { t.IPAddress_T, t.IPAddress_F }).ToList();
             var no = 0;
             foreach (var tf in tfs)
@@ -169,7 +169,7 @@ namespace ServiceMonitoringSystem.Web.Areas.TerminalStats.Controllers
         {
             var htmlStr =
                 new StringBuilder(
-                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 150px;\"><col style=\"width: 60px;\"><col style=\"width: 150px;\"><col style=\"width: 150px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">厂商</td><td class=\"td colName\" style=\"text-align: center;\">对应终端数量</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">车辆数</td></tr>");
+                    "<table class=\"x-table\" style=\"left: 0; table-layout: fixed; width: 857px;text-align:center\" cellspacing=\"0\" cellpadding=\"0\"><colgroup><col style=\"width: 50px;\"><col style=\"width: 50px;\"><col style=\"width: 60px;\"><col style=\"width: 100px;\"><col style=\"width: 100px;\"><col style=\"width: 60px;\"></colgroup><tbody><tr style=\"height: 29px;\"><td class=\"td colName\" style=\"text-align: center;\">序号</td><td class=\"td colName\" style=\"text-align: center;\">厂商</td><td class=\"td colName\" style=\"text-align: center;\">对应终端数量</td><td class=\"td colName\" style=\"text-align: center;\">终端地址</td><td class=\"td colName\" style=\"text-align: center;\">一道地址</td><td class=\"td colName\" style=\"text-align: center;\">车辆数</td></tr>");
             var ms = list.Select(t => t.Manufacturer).Distinct().OrderBy(t => t).ToList();
             var no = 0;
             foreach (var m in ms)
