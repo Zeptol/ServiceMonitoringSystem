@@ -91,8 +91,7 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
             hostList.AddRange(Rep.Distinct(t => t.Host, filter).Select(t => new ListItem(t, t)));
             ViewBag.ddlHost = hostList.ToArray();
             ViewBag.TreeNodes = _tree.GetTreeNodes(filter);
-            int count;
-            var list = Rep.QueryByPage(0, PageSize, out count, filter);
+            var list = Rep.QueryByPage(0, PageSize, out var count, filter);
             ViewBag.RecordCount = count;
             ViewBag.PageSize = PageSize;
             return View(list);

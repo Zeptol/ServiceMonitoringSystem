@@ -71,8 +71,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
 
         public virtual ActionResult Index()
         {
-            int count;
-            var list = Rep.QueryByPage(0, PageSize, out count);
+            var list = Rep.QueryByPage(0, PageSize, out var count);
             ViewBag.RecordCount = count;
             ViewBag.PageSize = PageSize;
             return View(list);
@@ -92,7 +91,6 @@ namespace ServiceMonitoringSystem.Web.Controllers
             var pageIndex = Convert.ToInt32(values[gridName + "_pageIndex"]??"0");
             var sortField = values[gridName + "_sortField"];
             var sortDirection = values[gridName + "_sortDirection"];
-            int count;
             var where = filter != null && filter.Any() ? Builders<T>.Filter.And(filter) : null;
             SortDefinition<T> sort = null;
             if (!string.IsNullOrEmpty(sortField))
@@ -106,7 +104,7 @@ namespace ServiceMonitoringSystem.Web.Controllers
                         sort = Builders<T>.Sort.Descending(exp);
                 }
             }
-            var list = Rep.QueryByPage(pageIndex, PageSize, out count, where, sort);
+            var list = Rep.QueryByPage(pageIndex, PageSize, out var count, where, sort);
             // 导出用
             Session["list"] = list;
             var grid = UIHelper.Grid(gridName);
