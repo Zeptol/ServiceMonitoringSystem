@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode>true</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -153,8 +154,6 @@
     <Compile Include="Areas\Service\Controllers\GroupNameController.cs" />
     <Compile Include="Areas\Service\Controllers\ManageController.cs" />
     <Compile Include="Areas\Service\Controllers\PhysicalDeviceController.cs" />
-    <Compile Include="Areas\Service\Controllers\VirtualDeviceController.cs" />
-    <Compile Include="Areas\Service\Controllers\VirtualDeviceIFrameWindowController.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
     <Compile Include="Areas\TerminalStats\Controllers\TerminalStatsController.cs" />
     <Compile Include="Areas\TerminalStats\TerminalStatsAreaRegistration.cs" />

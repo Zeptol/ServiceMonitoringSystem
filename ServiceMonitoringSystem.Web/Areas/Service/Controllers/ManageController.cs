@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using BS.Microservice.Common;
 using FineUIMvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -542,8 +541,8 @@ namespace ServiceMonitoringSystem.Web.Areas.Service.Controllers
                     Alert.Show("服务已经审批", MessageBoxIcon.Warning);
                     return UIHelper.Result();
                 }
-                var serverName = string.Format("{0}/{1}", model.ServiceName, model.SecondaryName);
-                ServerDiscoveryHelper.ServiceRegister(serverName, model.Version, model.RegContent);
+                var serverName = $"{model.ServiceName}/{model.SecondaryName}";
+                //ServerDiscoveryHelper.ServiceRegister(serverName, model.Version, model.RegContent);
                 Rep.Update(t => t._id == id, Builders<ServiceList>.Update.Set(t => t.IsApproved, true));
                 ShowNotify("注册成功");
                 OnUpdated(values);
